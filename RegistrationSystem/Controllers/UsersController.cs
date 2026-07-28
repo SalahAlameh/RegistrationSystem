@@ -117,6 +117,53 @@ namespace RegistrationSystem.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: /Users/ResetPassword/5
+        [HttpGet]
+        public async Task<IActionResult> ResetPassword(string id)
+        {
+            var model =
+                await _userService.GetResetPasswordModelAsync(id);
+
+            if (model == null)
+            {
+                return NotFound();
+            }
+
+            return View(model);
+        }
+
+        // POST: /Users/ResetPassword
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(
+            ResetUserPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result =
+                await _userService.ResetPasswordAsync(model, User);
+
+            if (result.NotFound)
+            {
+                return NotFound();
+            }
+
+            if (!result.Succeeded)
+            {
+                AddErrors(result);
+
+                return View(model);
+            }
+
+            TempData["SuccessMessage"] =
+                $"The password for {model.Email} was reset successfully.";
+
+            return RedirectToAction(nameof(Index));
+        }
+
         // POST: /Users/Disable/5
         [HttpPost]
         [ValidateAntiForgeryToken]

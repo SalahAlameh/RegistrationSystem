@@ -40,7 +40,7 @@ namespace RegistrationSystem.Services
 
         public void ReturnBook(Borrow borrow) // takes the already-fetched borrow object (not just id), because .Find() in the line above return a tracked entity
         {
-            borrow.ReturnDate = DateTime.Now; // changes the return date to now
+            borrow.ReturnDate = DateTime.UtcNow; // changes the return date to now
             _context.SaveChanges();
         }
     }

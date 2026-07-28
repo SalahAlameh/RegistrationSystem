@@ -37,7 +37,7 @@ namespace RegistrationSystem.Data
             var currentUserEmail = _httpContextAccessor.HttpContext?.User?.Identity?.Name ?? "System"; // System means if no user email was found, use System instead
             // tries to get the logged-in email; System is used only if there is no logged-in user, such as during database setup
 
-            var currentDateTime = DateTime.Now;
+            var currentDateTime = DateTime.UtcNow;
             // ChangeTracker is an EF Core feature that keeps track of all the entities that have been added, modified, or deleted in the current context. It allows us to inspect and manipulate these entities before they are saved to the database.
             foreach (var entry in ChangeTracker.Entries<IAuditableEntity>()) // find all entities that support auditing
             {

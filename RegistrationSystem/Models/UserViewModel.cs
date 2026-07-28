@@ -77,4 +77,31 @@ namespace RegistrationSystem.Models
 
         public List<SelectListItem> Persons { get; set; } = new();
     }
+
+    public class ResetUserPasswordViewModel
+    {
+        public string Id { get; set; } = string.Empty;
+
+        [Display(Name = "Email Address")]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(
+            100,
+            MinimumLength = 6,
+            ErrorMessage = "The password must contain at least 6 characters.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "New Password")]
+        public string NewPassword { get; set; } = string.Empty;
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Compare(
+            nameof(NewPassword),
+            ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Confirm New Password")]
+        public string ConfirmNewPassword { get; set; } = string.Empty;
+    }
+
 }
+

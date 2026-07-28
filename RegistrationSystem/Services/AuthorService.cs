@@ -59,7 +59,7 @@ namespace RegistrationSystem.Services
             }
 
             author.IsDeleted = true;
-            author.DeletedAt = DateTime.Now;
+            author.DeletedAt = DateTime.UtcNow;
             _context.SaveChanges();
 
             return true;

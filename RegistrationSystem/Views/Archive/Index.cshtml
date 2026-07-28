@@ -24,7 +24,9 @@
             {
                 <tr>
                     <td>@person.FullName</td>
-                    <td>@person.DeletedAt?.ToString("g")</td>
+                    <td>@(person.DeletedAt.HasValue
+                        ? $"{person.DeletedAt.Value:yyyy-MM-dd HH:mm} UTC"
+                        : "")</td>
                     <td>
                         <form asp-controller="Person"
                               asp-action="Restore"
@@ -66,7 +68,9 @@ else
                 <tr>
                     <td>@book.Title</td>
                     <td>@book.Copies</td>
-                    <td>@book.DeletedAt?.ToString("g")</td>
+                    <td>@(book.DeletedAt.HasValue
+                        ? $"{book.DeletedAt.Value:yyyy-MM-dd HH:mm} UTC"
+                        : "")</td>
                     <td>
                         <form asp-controller="Book"
                               asp-action="Restore"
@@ -106,7 +110,9 @@ else
             {
                 <tr>
                     <td>@author.FullName</td>
-                    <td>@author.DeletedAt?.ToString("g")</td>
+                    <td>@(author.DeletedAt.HasValue
+                        ? $"{author.DeletedAt.Value:yyyy-MM-dd HH:mm} UTC"
+                        : "")</td>
                     <td>
                         <form asp-controller="Author"
                               asp-action="Restore"
@@ -146,7 +152,9 @@ else
             {
                 <tr>
                     <td>@category.Name</td>
-                    <td>@category.DeletedAt?.ToString("g")</td>
+                    <td>@(category.DeletedAt.HasValue
+                        ? $"{category.DeletedAt.Value:yyyy-MM-dd HH:mm} UTC"
+                        : "")</td>
                     <td>
                         <form asp-controller="Category"
                               asp-action="Restore"

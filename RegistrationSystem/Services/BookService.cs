@@ -67,7 +67,7 @@ namespace RegistrationSystem.Services
             if (book != null)
             {
                 book.IsDeleted = true;
-                book.DeletedAt = DateTime.Now;
+                book.DeletedAt = DateTime.UtcNow;
                 _context.SaveChanges();
             }
         }

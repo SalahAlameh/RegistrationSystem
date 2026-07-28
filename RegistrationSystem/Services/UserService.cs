@@ -483,6 +483,69 @@ namespace RegistrationSystem.Services
             return UserOperationResult.Success();
         }
 
+        // Builds the form used by an administrator to reset another user's password.
+        public async Task<ResetUserPasswordViewModel?>
+            GetResetPasswordModelAsync(string id)
+        {
+            var identityUser =
+                await _userManager.FindByIdAsync(id);
+
+            if (identityUser == null)
+            {
+                return null;
+            }
+
+            return new ResetUserPasswordViewModel
+            {
+                Id = identityUser.Id,
+                Email = identityUser.Email
+                    ?? identityUser.UserName
+                    ?? "No email"
+            };
+        }
+
+        // Resets another user's password without requiring their old password.
+        public async Task<UserOperationResult> ResetPasswordAsync(
+            ResetUserPasswordViewModel model,
+            ClaimsPrincipal currentUser)
+        {
+            var identityUser =
+                await _userManager.FindByIdAsync(model.Id);
+
+            if (identityUser == null)
+            {
+                return UserOperationResult.NotFoundResult();
+            }
+
+            // Administrators should use Change Password for their own account,
+            // because that process confirms their current password first.
+            if (identityUser.Id ==
+                _userManager.GetUserId(currentUser))
+            {
+                return UserOperationResult.Failed(
+                    "Use Change Password to change your own password.");
+            }
+
+            // Identity requires a secure, temporary reset token before it
+            // allows a password to be reset without the old password.
+            var resetToken =
+                await _userManager.GeneratePasswordResetTokenAsync(
+                    identityUser);
+
+            var resetResult =
+                await _userManager.ResetPasswordAsync(
+                    identityUser,
+                    resetToken,
+                    model.NewPassword);
+
+            if (!resetResult.Succeeded)
+            {
+                return FromIdentityResult(resetResult);
+            }
+
+            return UserOperationResult.Success();
+        }
+
         // Deactivates an account without permanently deleting it.
         public async Task<UserOperationResult> DisableAsync(
             string id,

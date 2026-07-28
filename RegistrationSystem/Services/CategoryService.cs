@@ -51,7 +51,7 @@ namespace RegistrationSystem.Services
             if (category != null)
             {
                 category.IsDeleted = true;
-                category.DeletedAt = DateTime.Now;
+                category.DeletedAt = DateTime.UtcNow;
                 _context.SaveChanges();
             }
         }

@@ -23,9 +23,13 @@
             <tr>
                 <td>@borrow.Person?.FullName</td>
                 <td>@borrow.Book?.Title</td>
-                <td>@borrow.BorrowDate.ToShortDateString()</td>
                 <td>
-                    @(borrow.ReturnDate?.ToString("d") ?? "Not returned")
+                    @($"{borrow.BorrowDate:yyyy-MM-dd HH:mm} UTC")
+                </td>
+                <td>
+                    @(borrow.ReturnDate.HasValue
+                    ? $"{borrow.ReturnDate.Value:yyyy-MM-dd HH:mm} UTC"
+                    : "Not returned")
                 </td>
 
                 <td>
@@ -47,7 +51,9 @@
                     }
                     else
                     {
-                        <span class="text-muted">@borrow.ReturnDate.Value.ToShortDateString()</span>
+                        <span class="text-muted">
+                            @($"{borrow.ReturnDate.Value:yyyy-MM-dd HH:mm} UTC")
+                        </span>
                     }
                 </td>
             </tr>

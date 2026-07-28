@@ -57,7 +57,7 @@ namespace RegistrationSystem.Controllers
             {
                 PersonId = model.PersonId,
                 BookId = model.BookId,
-                BorrowDate = DateTime.Now
+                BorrowDate = DateTime.UtcNow
             };
 
             _borrowService.Borrow(borrow);

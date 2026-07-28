@@ -63,7 +63,7 @@ namespace RegistrationSystem.Services
             if (person != null)
             {
                 person.IsDeleted = true;
-                person.DeletedAt = DateTime.Now;
+                person.DeletedAt = DateTime.UtcNow;
                 _context.SaveChanges();
             }
         }
