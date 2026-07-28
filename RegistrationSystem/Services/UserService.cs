@@ -57,37 +57,6 @@ namespace RegistrationSystem.Services
             _context = context;
         }
 
-        // assigns the normal User role to a newly registered account.
-        public async Task<UserOperationResult> AssignInitialUserRoleAsync(
-            IdentityUser identityUser)
-        {
-            const string defaultRole = "User";
-
-            // confirms that the User role was created by IdentitySeedData.
-            if (!await _roleManager.RoleExistsAsync(defaultRole))
-            {
-                // remove the account if the required role does not exist,
-                // so an incomplete account is not left in the database.
-                await _userManager.DeleteAsync(identityUser);
-
-                return UserOperationResult.Failed(
-                    "The User role does not exist.");
-            }
-
-            var roleResult = await _userManager.AddToRoleAsync(
-                identityUser,
-                defaultRole);
-
-            if (!roleResult.Succeeded)
-            {
-                // roll back the newly created account if role assignment fails.
-                await _userManager.DeleteAsync(identityUser);
-
-                return FromIdentityResult(roleResult);
-            }
-
-            return UserOperationResult.Success();
-        }
 
         // loads all Identity users and the roles assigned to each user.
         public async Task<List<UserListViewModel>> GetAllAsync( // this method prepares the Users list page
