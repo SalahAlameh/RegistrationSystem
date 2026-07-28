@@ -1,0 +1,57 @@
+﻿@model RegistrationSystem.Models.Person
+
+@* Tells Razor this view is strongly tied to a Person object.
+   Because of this, everywhere below you can use asp-for="FullName"
+   and Razor knows exactly which C# property you mean. *@
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h2>Person Registration</h2>
+
+<form asp-action="Register" method="post">
+    <div class="mb-3">
+        @* Bootstrap spacing (margin-bottom) *@
+        <label asp-for="FullName" class="form-label"></label>
+        <input asp-for="FullName" class="form-control" />
+        @* Didn't write type manually — it automatically chooses the right
+           input type based on the property's C# type *@
+        <span asp-validation-for="FullName" class="text-danger"></span>
+        @* Empty placeholder that JS fills in with an error message
+           when the field is empty or invalid *@
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Age" class="form-label"></label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Gender" class="form-label"></label>
+        <select asp-for="Gender" class="form-select">
+            @* Hardcoded select with hardcoded options *@
+            <option value="">-- Select Gender --</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Major" class="form-label"></label>
+        <input asp-for="Major" class="form-control" />
+        <span asp-validation-for="Major" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+@* This gives immediate feedback (e.g. errors when entering a letter
+   in the Age field) without waiting for the server round-trip *@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,50 @@
+﻿@model List<RegistrationSystem.Models.Person>
+
+@{
+    ViewData["Title"] = "Registered Persons";
+}
+
+@*this moves the register action from the navigation bar into the Registered Persons page*@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Registered Persons</h2>
+
+    <a asp-action="Register"
+       class="btn btn-primary">
+        Register Person
+    </a>
+</div> @*this was previously <h2>Registered Persons</h2>*@
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Id</th>
+            <th>Full Name</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Major</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>@person.Id</td>
+                <td>@person.FullName</td>
+                <td>@person.Age</td>
+                <td>@person.Gender</td>
+                <td>@person.Major</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@person.Id" class="btn btn-sm btn-warning">Edit</a>
+
+                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                            data-id="@person.Id" data-name="@person.FullName">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@await Html.PartialAsync("_DeleteModal")

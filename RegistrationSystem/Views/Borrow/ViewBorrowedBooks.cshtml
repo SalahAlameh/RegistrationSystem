@@ -1,0 +1,56 @@
+﻿@model List<RegistrationSystem.Models.Borrow>
+
+@{
+    ViewData["Title"] = "Borrowed Books";
+}
+
+<h2>Borrowed Books</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-dark">
+        <tr>
+            <th>Person</th>
+            <th>Book</th>
+            <th>Borrow Date</th>
+            <th>Return Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var borrow in Model)
+        {
+            <tr>
+                <td>@borrow.Person?.FullName</td>
+                <td>@borrow.Book?.Title</td>
+                <td>@borrow.BorrowDate.ToShortDateString()</td>
+                <td>
+                    @(borrow.ReturnDate?.ToString("d") ?? "Not returned")
+                </td>
+
+                <td>
+                     @if (borrow.ReturnDate == null)
+                    {
+                        <span class="badge bg-danger">Active</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Returned</span>
+                    }
+                </td>
+                <td>
+                    @if (borrow.ReturnDate == null)
+                    {
+                        <form asp-action="ReturnBook" asp-route-id="@borrow.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-primary">Return</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">@borrow.ReturnDate.Value.ToShortDateString()</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

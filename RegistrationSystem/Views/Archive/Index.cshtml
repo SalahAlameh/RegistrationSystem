@@ -1,0 +1,169 @@
+﻿@model RegistrationSystem.Models.ArchiveViewModel
+
+@{
+    ViewData["Title"] = "Archive";
+}
+
+<h2>Archive</h2>
+
+<h4 class="mt-4">Archived Persons</h4>
+
+@if (Model.Persons.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Full Name</th>
+                <th>Archived At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var person in Model.Persons)
+            {
+                <tr>
+                    <td>@person.FullName</td>
+                    <td>@person.DeletedAt?.ToString("g")</td>
+                    <td>
+                        <form asp-controller="Person"
+                              asp-action="Restore"
+                              asp-route-id="@person.Id"
+                              method="post">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success">
+                                Restore
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No archived persons.</p>
+}
+
+<h4 class="mt-4">Archived Books</h4>
+
+@if (Model.Books.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Title</th>
+                <th>Copies</th>
+                <th>Archived At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var book in Model.Books)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Copies</td>
+                    <td>@book.DeletedAt?.ToString("g")</td>
+                    <td>
+                        <form asp-controller="Book"
+                              asp-action="Restore"
+                              asp-route-id="@book.Id"
+                              method="post">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success">
+                                Restore
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No archived books.</p>
+}
+
+<h4 class="mt-4">Archived Authors</h4>
+
+@if (Model.Authors.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Full Name</th>
+                <th>Archived At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var author in Model.Authors)
+            {
+                <tr>
+                    <td>@author.FullName</td>
+                    <td>@author.DeletedAt?.ToString("g")</td>
+                    <td>
+                        <form asp-controller="Author"
+                              asp-action="Restore"
+                              asp-route-id="@author.Id"
+                              method="post">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success">
+                                Restore
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No archived authors.</p>
+}
+
+<h4 class="mt-4">Archived Categories</h4>
+
+@if (Model.Categories.Any())
+{
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Name</th>
+                <th>Archived At</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var category in Model.Categories)
+            {
+                <tr>
+                    <td>@category.Name</td>
+                    <td>@category.DeletedAt?.ToString("g")</td>
+                    <td>
+                        <form asp-controller="Category"
+                              asp-action="Restore"
+                              asp-route-id="@category.Id"
+                              method="post">
+                            <button type="submit"
+                                    class="btn btn-sm btn-success">
+                                Restore
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No archived categories.</p>
+}

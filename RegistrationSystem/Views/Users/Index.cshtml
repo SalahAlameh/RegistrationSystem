@@ -1,0 +1,241 @@
+﻿@model List<RegistrationSystem.Models.UserListViewModel>
+
+@{
+    ViewData["Title"] = "Users Management";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <h2>Users Management</h2>
+        <p class="text-muted mb-0">
+            Create accounts, assign roles, and control account access.
+        </p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">
+        Create User
+    </a>
+</div>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show"
+         role="alert">
+        @TempData["SuccessMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show"
+         role="alert">
+        @TempData["ErrorMessage"]
+
+        <button type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close">
+        </button>
+    </div>
+}
+
+<div class="card shadow-sm">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Linked Person</th>
+                        <th>Status</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model.Any())
+                    {
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td class="align-middle">
+                                    @user.Email
+
+                                    @if (user.IsCurrentUser)
+                                    {
+                                        <span class="badge bg-info text-dark ms-1">
+                                            You
+                                        </span>
+                                    }
+                                </td>
+
+                                <td class="align-middle">
+                                    <span class="badge bg-secondary">
+                                        @user.Role
+                                    </span>
+                                </td>
+
+                                <td class="align-middle">
+                                    @if (user.LinkedPersonName == "Not linked")
+                                    {
+                                        <span class="text-muted">
+                                            Not linked
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        @user.LinkedPersonName
+                                    }
+                                </td>
+
+                                <td class="align-middle">
+                                    @if (user.IsDisabled)
+                                    {
+                                        <span class="badge bg-danger">
+                                            Deactivated
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-success">
+                                            Active
+                                        </span>
+                                    }
+                                </td>
+
+                                <td class="text-end align-middle">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@user.Id"
+                                       class="btn btn-sm btn-warning">
+                                        Edit
+                                    </a>
+
+                                    @if (user.IsDisabled)
+                                    {
+                                        <form asp-action="Enable"
+                                              asp-route-id="@user.Id"
+                                              method="post"
+                                              class="d-inline">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-success">
+                                                Reactivate
+                                            </button>
+                                        </form>
+                                    }
+                                    else if (!user.IsCurrentUser)
+                                    {
+                                        <button type="button"
+                                                class="btn btn-sm btn-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#disableUserModal"
+                                                data-id="@user.Id"
+                                                data-email="@user.Email">
+                                            Deactivate
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-secondary"
+                                                disabled
+                                                title="You cannot deactivate your own account.">
+                                            Deactivate
+                                        </button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5"
+                                class="text-center text-muted py-4">
+                                No user accounts were found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@* This modal deactivates an account instead of permanently deleting it. *@
+<div class="modal fade"
+     id="disableUserModal"
+     tabindex="-1"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Deactivation</h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Are you sure you want to deactivate
+                <strong id="disableUserEmail"></strong>?
+
+                <p class="text-muted mt-2 mb-0">
+                    The user will not be able to log in until the account
+                    is reactivated.
+                </p>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <form id="disableUserForm"
+                      asp-action="Disable"
+                      method="post">
+                    <input type="hidden"
+                           name="id"
+                           id="disableUserId" />
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        Deactivate
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var disableUserModal =
+            document.getElementById('disableUserModal');
+
+        disableUserModal.addEventListener(
+            'show.bs.modal',
+            function(event) {
+                var button = event.relatedTarget;
+                var userId = button.getAttribute('data-id');
+                var userEmail = button.getAttribute('data-email');
+
+                document.getElementById('disableUserId').value =
+                    userId;
+
+                document.getElementById('disableUserEmail').textContent =
+                    userEmail;
+            });
+    </script>
+}

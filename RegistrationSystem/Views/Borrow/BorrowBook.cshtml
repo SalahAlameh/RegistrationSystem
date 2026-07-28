@@ -1,0 +1,60 @@
+﻿@model RegistrationSystem.Models.BorrowViewModel
+
+@{
+    ViewData["Title"] = "Borrow a Book";
+}
+
+<h2>Borrow a Book</h2>
+
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form asp-action="BorrowBook" method="post">
+    <div class="mb-3">
+        <label asp-for="PersonId" class="form-label"></label>
+        <select asp-for="PersonId" asp-items="Model.Persons" class="form-select">
+            <option value="">-- Select Person --</option>
+        </select>
+        <span asp-validation-for="PersonId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Filter by Category</label>
+        <select asp-for="CategoryId" asp-items="Model.Categories" class="form-select">
+            <option value="">-- All Categories --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BookId" class="form-label"></label>
+        <select asp-for="BookId" asp-items="Model.Books" class="form-select">
+            <option value="">-- Select Book --</option>
+        </select>
+        <span asp-validation-for="BookId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Borrow</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            $('#CategoryId').on('change', function() { // this whole block only runs the moment the user picks a different category, not on page load
+                var selectedCategoryId = $(this).val(); // grabs whatever the user just picked (or "" if they picked "-- All Categories --")
+
+                $.getJSON('/Borrow/GetBooksByCategory', { categoryId: selectedCategoryId }, function(books) { // it sends a background request to the endpoint from Step 3, without reloading the page, and once the server responds with the JSON array, the function in the last argument runs with that data
+                    var bookDropdown = $('#BookId');
+                    bookDropdown.empty(); // wipes out whatever options the Book dropdown currently has, since we're about to replace them
+                    bookDropdown.append($('<option></option>').val('').text('-- Select Book --')); // re-adds the placeholder option first, same as it had originally
+
+                    $.each(books, function (index, book) {
+                        bookDropdown.append($('<option></option>').val(book.value).text(book.text)); // jQuery's loop helper; walks through every {value, text} object the server sent back and builds a real <option> for each one
+                    });
+                });
+            });
+        });
+    </script>
+}
