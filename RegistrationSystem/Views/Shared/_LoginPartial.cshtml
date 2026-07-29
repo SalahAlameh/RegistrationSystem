@@ -10,13 +10,16 @@
             </span>
         </li>
 
-        <li class="nav-item">
-            <a class="nav-link text-dark"
-               asp-area="Identity"
-               asp-page="/Account/Manage/ChangePassword">
-                Change Password
-            </a>
-        </li>
+        @if (User.IsInRole("Admin"))
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark"
+                   asp-area="Identity"
+                   asp-page="/Account/Manage/ChangePassword">
+                    Change Password
+                </a>
+            </li>
+        }
 
         <li class="nav-item">
             <form class="form-inline"

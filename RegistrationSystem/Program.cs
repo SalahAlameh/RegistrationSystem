@@ -2,13 +2,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RegistrationSystem.Data;
 using RegistrationSystem.Services; // this is needed to use the PersonService and BookService class in the Program.cs file
+using Microsoft.AspNetCore.Identity.UI.Services; // this is needed to use the EmailSender class in the Program.cs file
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorPages(); // Identity Login and Register pages are Razor Pages, so this allows the application to use them
+builder.Services.AddRazorPages(options =>
+{
+    // Only administrators can open the Change Password page
+    // inside the Identity area.
+    options.Conventions.AuthorizeAreaPage(
+        "Identity",
+        "/Account/Manage/ChangePassword",
+        "AdminOnly");
+}); // Identity Login and Register pages are Razor Pages, so this allows the application to use them
 
 builder.Services.AddHttpContextAccessor(); // lets ApplicationDbContext access the currently logged-in user's email
 
@@ -29,6 +38,24 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
 .AddRoles<IdentityRole>() // adds role support so accounts can belong to roles such as Admin and User
 .AddEntityFrameworkStores<ApplicationDbContext>(); // tells Identity to save users and passwords in our ApplicationDbContext database
+// Defines the authorization rule used by the built-in Change Password page.
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy =>
+    {
+        policy.RequireRole("Admin");
+    });
+}); // this protects the actual page even if a regualr User manually types the URL
+
+// Loads Gmail SMTP settings from User Secrets.
+builder.Services.Configure<GmailOptions>(
+    builder.Configuration.GetSection("Gmail"));
+
+// Makes Gmail the email sender used by Identity's
+// Register, Forgot Password, and Reset Password pages.
+builder.Services.AddTransient<
+    IEmailSender,
+    EmailSender>();
 
 builder.Services.AddScoped<PersonService>(); // AddScoped means create one PersonService per web request, and reuse that same instance through that request
                                              //
