@@ -342,6 +342,9 @@ namespace RegistrationSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("PersonId")
                         .HasColumnType("int");
 

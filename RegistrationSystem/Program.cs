@@ -12,7 +12,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages(options =>
 {
     // Only administrators can open the Change Password page
-    // inside the Identity area.
+    // inside the Identity area.    
     options.Conventions.AuthorizeAreaPage(
         "Identity",
         "/Account/Manage/ChangePassword",
@@ -78,6 +78,7 @@ builder.Services.AddScoped<CategoryService>(); // basically one instance of Pers
                                              //   
                                              //   
 builder.Services.AddScoped<UserService>();   // lets UsersController use the user-management service
+builder.Services.AddScoped<DashboardService>(); // lets DashboardController use the dashboard reporting service
 var app = builder.Build();
 
 // creates the Admin and User roles and assigns the configured existing account to Admin.

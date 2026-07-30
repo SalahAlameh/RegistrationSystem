@@ -16,6 +16,16 @@ namespace RegistrationSystem.Services
 
         public void Borrow(Borrow borrow)
         {
+            if (borrow.BorrowDate == default)
+            {
+                borrow.BorrowDate = DateTime.UtcNow;
+            }
+
+            // the service calculates the due date so every borrow operation
+            // follows the same fourteen-day business rule.
+            borrow.DueDate = borrow.BorrowDate.AddDays(
+                RegistrationSystem.Models.Borrow.LoanDurationDays);
+
             _context.Borrows.Add(borrow);
             _context.SaveChanges();
         }

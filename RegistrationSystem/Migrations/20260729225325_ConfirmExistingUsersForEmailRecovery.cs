@@ -23,7 +23,7 @@ namespace RegistrationSystem.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            // Existing accounts must remain confirmed after email recovery
+            // existing accounts must remain confirmed after email recovery
             // is enabled, so this data change is intentionally not reversed.
 
         }

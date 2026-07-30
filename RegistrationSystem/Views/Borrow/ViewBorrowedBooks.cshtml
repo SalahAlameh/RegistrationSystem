@@ -12,6 +12,7 @@
             <th>Person</th>
             <th>Book</th>
             <th>Borrow Date</th>
+            <th>Due Date</th>
             <th>Return Date</th>
             <th>Status</th>
             <th>Actions</th>
@@ -27,15 +28,25 @@
                     @($"{borrow.BorrowDate:yyyy-MM-dd HH:mm} UTC")
                 </td>
                 <td>
+                    @($"{borrow.DueDate:yyyy-MM-dd HH:mm} UTC")
+                </td>
+                <td>
                     @(borrow.ReturnDate.HasValue
                     ? $"{borrow.ReturnDate.Value:yyyy-MM-dd HH:mm} UTC"
                     : "Not returned")
                 </td>
 
                 <td>
-                     @if (borrow.ReturnDate == null)
+                    @if (borrow.ReturnDate == null)
                     {
-                        <span class="badge bg-danger">Active</span>
+                        @if (borrow.DueDate < DateTime.UtcNow)
+                        {
+                            <span class="badge bg-warning text-dark">Overdue</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Active</span>
+                        }
                     }
                     else
                     {

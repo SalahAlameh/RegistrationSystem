@@ -1,0 +1,314 @@
+﻿@*this view looks different because it combines three technologies:
+    C# and Razor → prepare server-side data
+HTML/Bootstrap → build the visible page
+JavaScript/Chart.js → draw the charts in the browser
+*@
+@*importing the JSON serializer*@
+@using System.Text.Json 
+@model RegistrationSystem.Models.DashboardViewModel
+
+@* the Razor C# block*@
+@*everything inside this block
+runs on the server before the HTML is sent to the browser*@
+@{
+    ViewData["Title"] = "Dashboard & Reports";
+
+    var monthlyLabels = Model.MonthlyStatistics
+        .Select(item => item.Month) // go through each monthly statistic and take only its Month
+        .ToList();
+
+    var monthlyValues = Model.MonthlyStatistics
+        .Select(item => item.BorrowCount) // go through each monthly statistic and take only its BorrowCount
+        .ToList();
+
+    var categoryLabels = Model.TopCategories
+        .Select(item => item.Name) // go through each top category and take only its Name
+        .ToList();
+
+    var categoryValues = Model.TopCategories
+        .Select(item => item.Count) // go through each top category and take only its Count
+        .ToList();
+
+    var activeUserLabels = Model.ActiveUsers
+        .Select(item => item.Name) // go through each active user and take only its Name
+        .ToList();
+
+    var activeUserValues = Model.ActiveUsers
+        .Select(item => item.Count) // go through each active user and take only its Count
+        .ToList();
+}
+
+<h1 class="mb-4">Dashboard & Reports</h1>
+
+@* Summary cards *@
+<div class="row g-3 mb-4">
+    <div class="col-md-6 col-xl-3">
+        <div class="card text-bg-primary h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Books</h5>
+                <p class="display-5 mb-0">
+                    @Model.TotalBooks
+                </p>
+                <small>Active book titles</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card text-bg-success h-100">
+            <div class="card-body">
+                <h5 class="card-title">Total Members</h5>
+                <p class="display-5 mb-0">
+                    @Model.TotalMembers
+                </p>
+                <small>Active registered persons</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card text-bg-info h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Active Borrowings
+                </h5>
+                <p class="display-5 mb-0">
+                    @Model.ActiveBorrowings
+                </p>
+                <small>Books not yet returned</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-xl-3">
+        <div class="card text-bg-danger h-100">
+            <div class="card-body">
+                <h5 class="card-title">Overdue Books</h5>
+                <p class="display-5 mb-0">
+                    @Model.OverdueBooks
+                </p>
+                <small>
+                    Active borrows past their due date
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Borrowing trends and top categories charts *@
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Borrowing Trends
+                </h5>
+
+                <div style="height: 320px;">
+                    <canvas id="borrowingTrendsChart">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Top Categories
+                </h5>
+
+                <div style="height: 320px;">
+                    <canvas id="topCategoriesChart">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Active users chart and most borrowed books table *@
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Active Users</h5>
+
+                <div style="height: 300px;">
+                    <canvas id="activeUsersChart">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Most Borrowed Books
+                </h5>
+
+                @if (Model.MostBorrowedBooks.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Book</th>
+                                    <th class="text-end">
+                                        Borrowings
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item
+                                    in Model.MostBorrowedBooks)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td class="text-end">
+                                            @item.Count
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">
+                        There are no borrowing records yet.
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @* Chart.js draws the three dashboard charts. *@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        const monthlyLabels =
+            @Html.Raw(JsonSerializer.Serialize(monthlyLabels));
+
+        const monthlyValues =
+            @Html.Raw(JsonSerializer.Serialize(monthlyValues));
+
+        const categoryLabels =
+            @Html.Raw(JsonSerializer.Serialize(categoryLabels));
+
+        const categoryValues =
+            @Html.Raw(JsonSerializer.Serialize(categoryValues));
+
+        const activeUserLabels =
+            @Html.Raw(JsonSerializer.Serialize(activeUserLabels));
+
+        const activeUserValues =
+            @Html.Raw(JsonSerializer.Serialize(activeUserValues));
+
+        // Line chart showing borrowing activity during
+        // each of the latest twelve months.
+        new Chart(
+            document.getElementById('borrowingTrendsChart'),
+            {
+                type: 'line',
+
+                data: {
+                    labels: monthlyLabels,
+
+                    datasets: [{
+                        label: 'Borrowings',
+                        data: monthlyValues,
+                        borderColor: '#0d6efd',
+                        backgroundColor:
+                            'rgba(13, 110, 253, 0.15)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+
+        // Doughnut chart showing the categories with
+        // the highest historical borrowing counts.
+        new Chart(
+            document.getElementById('topCategoriesChart'),
+            {
+                type: 'doughnut',
+
+                data: {
+                    labels: categoryLabels,
+
+                    datasets: [{
+                        label: 'Borrowings',
+                        data: categoryValues,
+
+                        backgroundColor: [
+                            '#0d6efd',
+                            '#198754',
+                            '#ffc107',
+                            '#dc3545',
+                            '#6f42c1'
+                        ]
+                    }]
+                },
+
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+        // Horizontal bar chart showing members with
+        // the highest number of active borrowings.
+        new Chart(
+            document.getElementById('activeUsersChart'),
+            {
+                type: 'bar',
+
+                data: {
+                    labels: activeUserLabels,
+
+                    datasets: [{
+                        label: 'Active borrowings',
+                        data: activeUserValues,
+                        backgroundColor: '#20c997'
+                    }]
+                },
+
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+    </script>
+}

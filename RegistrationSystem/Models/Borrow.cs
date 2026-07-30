@@ -6,6 +6,7 @@ namespace RegistrationSystem.Models
 {
     public class Borrow : IAuditableEntity
     {
+        public const int LoanDurationDays = 14; // every borrow is due fourteen days after it is created
         public int Id { get; set; }
 
         public string CreatedBy { get; set; } = string.Empty; // email of the logged-in user who created this borrow record
@@ -27,6 +28,8 @@ namespace RegistrationSystem.Models
         public Book? Book { get; set; } // navigation property — lets you write borrow.Book.Title later          // instead of separately querying Books where Id == borrow.BookId we can do borrow.Book.Title
 
         public DateTime BorrowDate { get; set; }
+
+        public DateTime DueDate { get; set; } // calculated as BorrowDate plus the fourteen-day loan period
 
         public DateTime? ReturnDate { get; set; } // null = still borrowed (active); has a value = returned
     }
