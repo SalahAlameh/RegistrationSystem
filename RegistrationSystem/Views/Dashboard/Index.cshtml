@@ -191,14 +191,14 @@ runs on the server before the HTML is sent to the browser*@
 
 @section Scripts {
     @* Chart.js draws the three dashboard charts. *@
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> @*loading Chart.js*@
 
     <script>
         const monthlyLabels =
-            @Html.Raw(JsonSerializer.Serialize(monthlyLabels));
-
+            @Html.Raw(JsonSerializer.Serialize(monthlyLabels)); //converts a C# list into a JavaScript array that Chart.js can understand, the JsonSerializer.Serialize method converts the C# list into a JSON string, and the Html.Raw method ensures that the JSON string is rendered as raw HTML in the view
+                                                                // JSON is understood by JavaScript, so it can be used as a JavaScript array
         const monthlyValues =
-            @Html.Raw(JsonSerializer.Serialize(monthlyValues));
+            @Html.Raw(JsonSerializer.Serialize(monthlyValues)); 
 
         const categoryLabels =
             @Html.Raw(JsonSerializer.Serialize(categoryLabels));

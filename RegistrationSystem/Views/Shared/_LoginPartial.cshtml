@@ -1,12 +1,36 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 
+@* retrieves the logged-in account ID from the authentication information *@
+@inject UserManager<IdentityUser> UserManager
+
+@* uses that ID to find the linked Person *@
+@inject RegistrationSystem.Services.PersonService PersonService
+@{
+    var displayName = User.Identity?.Name;
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        var identityUserId =
+            UserManager.GetUserId(User);
+
+        var linkedPerson =
+            PersonService.GetByIdentityUserId(
+                identityUserId);
+
+        if (linkedPerson != null)
+        {
+            displayName = linkedPerson.FullName;
+        }
+    }
+}
+
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User)) // this line checks whether the visitor is logged in
     {
         <li class="nav-item">
             <span class="nav-link text-dark">
-                Hello @User.Identity?.Name!
+                Hello @displayName!
             </span>
         </li>
 

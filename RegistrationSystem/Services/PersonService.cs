@@ -33,6 +33,22 @@ namespace RegistrationSystem.Services
                 .ToList();
         }
 
+        // identity knows the logged in account by its string ID
+        // this method searches Persons.IdentityUserId for that ID
+        // it also excludes archived persons
+        public Person? GetByIdentityUserId(
+    string? identityUserId)
+        {
+            if (string.IsNullOrWhiteSpace(identityUserId))
+            {
+                return null;
+            }
+
+            return _context.Persons.FirstOrDefault(person =>
+                person.IdentityUserId == identityUserId &&
+                !person.IsDeleted);
+        }
+
         public Person? GetById(int id) // this looks up a single row by primary key, it return Person?(nullable) because the id might not exist - a caller has to check for null before using it.
         {                              // so the ? is just saying that this may return either a person or a null as well
             return _context.Persons

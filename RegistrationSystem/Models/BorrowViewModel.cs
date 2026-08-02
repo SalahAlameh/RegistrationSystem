@@ -10,6 +10,16 @@ namespace RegistrationSystem.Models
         [Display(Name = "Person")] // shows the label "Person" in the view
         public int PersonId { get; set; } // this and the BookId are what the user is choosing (what actually gets saved)
 
+        // true for an Admin who may select any Person.
+        // false for a regular User whose Person is selected automatically.
+        public bool CanChoosePerson { get; set; }
+
+        // displays the linked Person's name when a regular User borrows.
+        public string? BorrowingPersonName { get; set; }
+
+        // false when the logged-in account has no active linked Person.
+        public bool CanBorrow { get; set; } = true;
+
         [Required(ErrorMessage = "Please select a book.")]
         [Display(Name = "Book")]
         public int BookId { get; set; }

@@ -32,40 +32,34 @@ namespace RegistrationSystem.Controllers
 
         // POST: /Borrow/BorrowBook
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult BorrowBook(BorrowViewModel model)
         {
-            var book = _bookService.GetById(model.BookId);
-
-            if (book != null && book.Copies < 1)
-            {
-                ModelState.AddModelError("", "This book is out of stock and cannot be borrowed.");
-            }
-
-            int activeBorrows = _borrowService.GetActiveBorrowCountForPerson(model.PersonId);
-            if (activeBorrows >= 3)
-            {
-                ModelState.AddModelError("", "This person already has 3 active borrows and cannot borrow more until one is returned.");
-            }
-
             if (!ModelState.IsValid)
             {
                 PopulateDropdowns(model);
                 return View(model);
             }
 
-            var borrow = new Borrow // only reached if everything passed, builds a real Borrow entity from the two IDs
+            var result = _borrowService.BorrowBook(
+                model.PersonId,
+                model.BookId,
+                User); // User is the authenticated ClaimsPrincipal provided by the base MVC controller
+
+            if (!result.Succeeded)
             {
-                PersonId = model.PersonId,
-                BookId = model.BookId,
-                BorrowDate = DateTime.UtcNow
-            };
+                ModelState.AddModelError(
+                    string.Empty,
+                    result.ErrorMessage ?? "The book could not be borrowed.");
 
-            _borrowService.Borrow(borrow);
+                PopulateDropdowns(model);
+                return View(model);
+            }
 
-            book.Copies -= 1;
-            _bookService.Update(book);
+            TempData["SuccessMessage"] =
+                "The book was borrowed successfully.";
 
-            return RedirectToAction("ViewBorrowedBooks");
+            return RedirectToAction(nameof(ViewBorrowedBooks));
         }
 
         // GET: /Borrow/GetBooksByCategory?categoryId=3
@@ -87,56 +81,93 @@ namespace RegistrationSystem.Controllers
         [HttpGet]
         public IActionResult ViewBorrowedBooks()
         {
-            var allBorrows = _borrowService.GetAll();
+            var allBorrows = _borrowService.GetAll(User);
             return View(allBorrows);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult ReturnBook(int id) // int id is the borrow record being returned, not the bokk's id or the person's id
         {
-            var borrow = _borrowService.GetById(id);
-            if (borrow == null)
+            var result = _borrowService.ReturnBook(id,User);
+
+            if (result.NotFound)
             {
                 return NotFound();
             }
 
-            if (borrow.ReturnDate == null) // only process the return if it hasnt been returned
+            if (!result.Succeeded)
             {
-                _borrowService.ReturnBook(borrow);
+                TempData["ErrorMessage"] =
+                    result.ErrorMessage ?? "The book could not be returned.";
 
-                var book = _bookService.GetById(borrow.BookId);
-                if (book != null)
-                {
-                    book.Copies += 1;
-                    _bookService.Update(book);
-                }
+                return RedirectToAction(nameof(ViewBorrowedBooks));
             }
 
-            return RedirectToAction("ViewBorrowedBooks");
+            TempData["SuccessMessage"] =
+                "The book was returned successfully.";
+
+            return RedirectToAction(nameof(ViewBorrowedBooks));
         }
 
 
 
         private void PopulateDropdowns(BorrowViewModel model)
         {
-            model.Persons = _personService.GetAll().Select(p => new SelectListItem
-            {
-                Value = p.Id.ToString(),
-                Text = p.FullName
-            });
+            model.CanChoosePerson =
+                User.IsInRole("Admin");
 
-            model.Books = _bookService.GetAll().Select(b => new SelectListItem
+            if (model.CanChoosePerson)
             {
-                Value = b.Id.ToString(),
-                Text = b.Title
-            });
+                // Admins may choose any active Person.
+                model.Persons = _personService.GetAll()
+                    .Select(p => new SelectListItem
+                    {
+                        Value = p.Id.ToString(),
+                        Text = p.FullName
+                    });
 
-            model.Categories = _categoryService.GetAll().Select(c => new SelectListItem
+                model.CanBorrow = true;
+            }
+            else
             {
-                Value = c.Id.ToString(),
-                Text = c.Name
-            });
+                // Regular Users borrow only for the Person linked
+                // to their logged-in Identity account.
+                var linkedPerson =
+                    _borrowService.GetLinkedPerson(User);
 
+                model.Persons =
+                    Enumerable.Empty<SelectListItem>();
+
+                if (linkedPerson == null)
+                {
+                    model.PersonId = 0;
+                    model.BorrowingPersonName = null;
+                    model.CanBorrow = false;
+                }
+                else
+                {
+                    model.PersonId = linkedPerson.Id;
+                    model.BorrowingPersonName =
+                        linkedPerson.FullName;
+
+                    model.CanBorrow = true;
+                }
+            }
+
+            model.Books = _bookService.GetAll()
+                .Select(b => new SelectListItem
+                {
+                    Value = b.Id.ToString(),
+                    Text = b.Title
+                });
+
+            model.Categories = _categoryService.GetAll()
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Name
+                });
         }
     }
 }
