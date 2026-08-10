@@ -5,16 +5,32 @@ JavaScript/Chart.js → draw the charts in the browser
 *@
 @*importing the JSON serializer*@
 @using System.Text.Json 
+@using System.Globalization
 @model RegistrationSystem.Models.DashboardViewModel
+
+@* Retrieves Dashboard translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 
 @* the Razor C# block*@
 @*everything inside this block
 runs on the server before the HTML is sent to the browser*@
 @{
-    ViewData["Title"] = "Dashboard & Reports";
+    ViewData["Title"] =
+    Localizer["DashboardTitle"];
 
+    // Converts the service's stable yyyy-MM value into
+    // a month name formatted for the selected language.
     var monthlyLabels = Model.MonthlyStatistics
-        .Select(item => item.Month) // go through each monthly statistic and take only its Month
+        .Select(item =>
+            DateTime.ParseExact(
+                item.Month,
+                "yyyy-MM",
+                CultureInfo.InvariantCulture)
+            .ToString(
+                "MMMM yyyy",
+                CultureInfo.CurrentUICulture))
         .ToList();
 
     var monthlyValues = Model.MonthlyStatistics
@@ -36,20 +52,46 @@ runs on the server before the HTML is sent to the browser*@
     var activeUserValues = Model.ActiveUsers
         .Select(item => item.Count) // go through each active user and take only its Count
         .ToList();
+
+    // These values are serialized below so translated
+    // resource text can be used safely by JavaScript.
+    var borrowingsChartLabel =
+        Localizer["BorrowingsChartLabel"].Value;
+
+    var activeBorrowingsChartLabel =
+        Localizer["ActiveBorrowingsChartLabel"].Value;
+
+    // Chart.js uses the culture for formatting numbers
+    // and the direction for its canvas-based text.
+    var chartCulture =
+        CultureInfo.CurrentUICulture.Name;
+
+    var chartIsRightToLeft =
+        CultureInfo.CurrentUICulture
+            .TextInfo
+            .IsRightToLeft;
 }
 
-<h1 class="mb-4">Dashboard & Reports</h1>
+<h1 class="mb-4">
+    @Localizer["DashboardTitle"]
+</h1>
 
 @* Summary cards *@
 <div class="row g-3 mb-4">
     <div class="col-md-6 col-xl-3">
         <div class="card text-bg-primary h-100">
             <div class="card-body">
-                <h5 class="card-title">Total Books</h5>
+                <h5 class="card-title">
+                    @Localizer["TotalBooksTitle"]
+                </h5>
+
                 <p class="display-5 mb-0">
                     @Model.TotalBooks
                 </p>
-                <small>Active book titles</small>
+
+                <small>
+                    @Localizer["ActiveBookTitlesDescription"]
+                </small>
             </div>
         </div>
     </div>
@@ -57,11 +99,17 @@ runs on the server before the HTML is sent to the browser*@
     <div class="col-md-6 col-xl-3">
         <div class="card text-bg-success h-100">
             <div class="card-body">
-                <h5 class="card-title">Total Members</h5>
+                <h5 class="card-title">
+                    @Localizer["TotalMembersTitle"]
+                </h5>
+
                 <p class="display-5 mb-0">
                     @Model.TotalMembers
                 </p>
-                <small>Active registered persons</small>
+
+                <small>
+                    @Localizer["ActiveRegisteredPersonsDescription"]
+                </small>
             </div>
         </div>
     </div>
@@ -70,12 +118,16 @@ runs on the server before the HTML is sent to the browser*@
         <div class="card text-bg-info h-100">
             <div class="card-body">
                 <h5 class="card-title">
-                    Active Borrowings
+                    @Localizer["ActiveBorrowingsTitle"]
                 </h5>
+
                 <p class="display-5 mb-0">
                     @Model.ActiveBorrowings
                 </p>
-                <small>Books not yet returned</small>
+
+                <small>
+                    @Localizer["BooksNotReturnedDescription"]
+                </small>
             </div>
         </div>
     </div>
@@ -83,12 +135,16 @@ runs on the server before the HTML is sent to the browser*@
     <div class="col-md-6 col-xl-3">
         <div class="card text-bg-danger h-100">
             <div class="card-body">
-                <h5 class="card-title">Overdue Books</h5>
+                <h5 class="card-title">
+                    @Localizer["OverdueBooksTitle"]
+                </h5>
+
                 <p class="display-5 mb-0">
                     @Model.OverdueBooks
                 </p>
+
                 <small>
-                    Active borrows past their due date
+                    @Localizer["OverdueBooksDescription"]
                 </small>
             </div>
         </div>
@@ -101,7 +157,7 @@ runs on the server before the HTML is sent to the browser*@
         <div class="card h-100">
             <div class="card-body">
                 <h5 class="card-title">
-                    Borrowing Trends
+                    @Localizer["BorrowingTrendsTitle"]
                 </h5>
 
                 <div style="height: 320px;">
@@ -116,7 +172,7 @@ runs on the server before the HTML is sent to the browser*@
         <div class="card h-100">
             <div class="card-body">
                 <h5 class="card-title">
-                    Top Categories
+                    @Localizer["TopCategoriesTitle"]
                 </h5>
 
                 <div style="height: 320px;">
@@ -133,7 +189,9 @@ runs on the server before the HTML is sent to the browser*@
     <div class="col-lg-6">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">Active Users</h5>
+                <h5 class="card-title">
+                    @Localizer["ActiveUsersTitle"]
+                </h5>
 
                 <div style="height: 300px;">
                     <canvas id="activeUsersChart">
@@ -147,7 +205,7 @@ runs on the server before the HTML is sent to the browser*@
         <div class="card h-100">
             <div class="card-body">
                 <h5 class="card-title">
-                    Most Borrowed Books
+                    @Localizer["MostBorrowedBooksTitle"]
                 </h5>
 
                 @if (Model.MostBorrowedBooks.Any())
@@ -156,9 +214,12 @@ runs on the server before the HTML is sent to the browser*@
                         <table class="table table-sm align-middle">
                             <thead>
                                 <tr>
-                                    <th>Book</th>
-                                    <th class="text-end">
-                                        Borrowings
+                                    <th>
+                                        @Localizer["BookColumn"]
+                                    </th>
+
+                                    <th class="text-end"> @*aligns the words in english to the right and arabic to the left*@
+                                        @Localizer["BorrowingsColumn"]
                                     </th>
                                 </tr>
                             </thead>
@@ -181,7 +242,7 @@ runs on the server before the HTML is sent to the browser*@
                 else
                 {
                     <p class="text-muted">
-                        There are no borrowing records yet.
+                        @Localizer["NoBorrowingRecordsMessage"]
                     </p>
                 }
             </div>
@@ -212,6 +273,27 @@ runs on the server before the HTML is sent to the browser*@
         const activeUserValues =
             @Html.Raw(JsonSerializer.Serialize(activeUserValues));
 
+        // JSON serialization safely handles Arabic text,
+        // quotation marks, and other JavaScript-sensitive characters.
+        const borrowingsChartLabel =
+            @Html.Raw(JsonSerializer.Serialize(
+                    borrowingsChartLabel));
+
+        const activeBorrowingsChartLabel =
+            @Html.Raw(JsonSerializer.Serialize(
+                    activeBorrowingsChartLabel));
+
+        const chartCulture =
+            @Html.Raw(JsonSerializer.Serialize(
+                    chartCulture));
+
+        const chartIsRightToLeft =
+            @Html.Raw(JsonSerializer.Serialize(
+                    chartIsRightToLeft));
+
+        const chartTextDirection =
+            chartIsRightToLeft ? 'rtl' : 'ltr';
+
         // Line chart showing borrowing activity during
         // each of the latest twelve months.
         new Chart(
@@ -223,7 +305,7 @@ runs on the server before the HTML is sent to the browser*@
                     labels: monthlyLabels,
 
                     datasets: [{
-                        label: 'Borrowings',
+                        label: borrowingsChartLabel,
                         data: monthlyValues,
                         borderColor: '#0d6efd',
                         backgroundColor:
@@ -236,6 +318,19 @@ runs on the server before the HTML is sent to the browser*@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    locale: chartCulture, // lets Chart.js format values according to English or Arabic
+
+                    plugins: {
+                        legend: {
+                            rtl: chartIsRightToLeft, // reverses the legend and tooltip layout in Arabic
+                            textDirection: chartTextDirection // controls the direction of canvas-rendered text, which does not automatically behave like regular HTML
+                        },
+
+                        tooltip: {
+                            rtl: chartIsRightToLeft,
+                            textDirection: chartTextDirection
+                        }
+                    },
 
                     scales: {
                         y: {
@@ -259,7 +354,7 @@ runs on the server before the HTML is sent to the browser*@
                     labels: categoryLabels,
 
                     datasets: [{
-                        label: 'Borrowings',
+                        label: borrowingsChartLabel,
                         data: categoryValues,
 
                         backgroundColor: [
@@ -274,7 +369,20 @@ runs on the server before the HTML is sent to the browser*@
 
                 options: {
                     responsive: true,
-                    maintainAspectRatio: false
+                    maintainAspectRatio: false,
+                    locale: chartCulture,
+
+                    plugins: {
+                        legend: {
+                            rtl: chartIsRightToLeft,
+                            textDirection: chartTextDirection
+                        },
+
+                        tooltip: {
+                            rtl: chartIsRightToLeft,
+                            textDirection: chartTextDirection
+                        }
+                    }
                 }
             });
 
@@ -289,7 +397,7 @@ runs on the server before the HTML is sent to the browser*@
                     labels: activeUserLabels,
 
                     datasets: [{
-                        label: 'Active borrowings',
+                        label: activeBorrowingsChartLabel,
                         data: activeUserValues,
                         backgroundColor: '#20c997'
                     }]
@@ -299,6 +407,19 @@ runs on the server before the HTML is sent to the browser*@
                     indexAxis: 'y',
                     responsive: true,
                     maintainAspectRatio: false,
+                    locale: chartCulture,
+
+                    plugins: {
+                        legend: {
+                            rtl: chartIsRightToLeft,
+                            textDirection: chartTextDirection
+                        },
+
+                        tooltip: {
+                            rtl: chartIsRightToLeft,
+                            textDirection: chartTextDirection
+                        }
+                    },
 
                     scales: {
                         x: {

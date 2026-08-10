@@ -1,11 +1,48 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using System.Globalization
+
+@{
+    // Identifies which language is active so the
+    // matching language button can be highlighted.
+    var currentCulture = // for example "en"
+        CultureInfo.CurrentUICulture
+            .TwoLetterISOLanguageName;
+
+    // Arabic is written from right to left.
+    // This also supports other RTL languages if added later.
+    var isRightToLeft =
+        CultureInfo.CurrentUICulture
+            .TextInfo
+            .IsRightToLeft;
+
+
+    // Keeps the user on the same page after changing
+    // the language, including any query-string values.
+    var currentReturnUrl = // for example "/Identity/Account/Login?returnUrl=%2FBook"
+        $"{Context.Request.PathBase}" +
+        $"{Context.Request.Path}" +
+        $"{Context.Request.QueryString}";
+}
+
+<!DOCTYPE html>
+<html lang="@currentCulture"
+      dir="@(isRightToLeft ? "rtl" : "ltr")">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - RegistrationSystem</title>
     <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* Bootstrap provides separate stylesheets for
+   left-to-right and right-to-left layouts. *@
+    @if (isRightToLeft)
+    {
+        <link rel="stylesheet"
+              href="~/lib/bootstrap/dist/css/bootstrap.rtl.min.css" />
+    }
+    else
+    {
+        <link rel="stylesheet"
+              href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    }
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/RegistrationSystem.styles.css" asp-append-version="true" />
 </head>
@@ -33,13 +70,17 @@
                     @*this where we add our 2 new li*@
 
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Book"
-                               asp-action="Index">
-                                View Books
-                            </a>
-                        </li>
+                        @* The Books link is useful only after authentication. *@
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Book"
+                                   asp-action="Index">
+                                    View Books
+                                </a>
+                            </li>
+                        }
 
                         @* Only administrators can see the Dashboard and Reports link. *@
                         @if (User.IsInRole("Admin"))
@@ -64,13 +105,17 @@
                             </li>
                         }
 
-                        <li class="nav-item">
-                            <a class="nav-link text-dark"
-                               asp-controller="Borrow"
-                               asp-action="ViewBorrowedBooks">
-                                Borrowed Books
-                            </a>
-                        </li>
+                        @* Borrowing history is available only after authentication. *@
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark"
+                                   asp-controller="Borrow"
+                                   asp-action="ViewBorrowedBooks">
+                                    Borrowed Books
+                                </a>
+                            </li>
+                        }
 
                         @if (User.IsInRole("Admin"))
                         {
@@ -96,7 +141,46 @@
                         }
                     </ul>
 
-                    @await Html.PartialAsync("_LoginPartial")
+                    <div class="d-flex align-items-center">
+                        @* Sends the selected language to CultureController.
+       The ASP.NET form tag helper automatically adds
+       the anti-forgery token required by the action. *@
+                        <form asp-controller="Culture"
+                              asp-action="SetLanguage"
+                              method="post"
+                              class="d-flex align-items-center gap-1 me-3">
+
+                            <input type="hidden"
+                                   name="returnUrl"
+                                   value="@currentReturnUrl" />
+
+                            <button type="submit"
+                                    name="culture"
+                                    value="en"
+                                    class="btn btn-sm @(currentCulture == "en"
+                                                    ? "btn-primary"
+                                                    : "btn-outline-secondary")"
+                                    aria-pressed="@(currentCulture == "en"
+                                                    ? "true"
+                                                    : "false")">
+                                EN
+                            </button>
+
+                            <button type="submit"
+                                    name="culture"
+                                    value="ar"
+                                    class="btn btn-sm @(currentCulture == "ar"
+                                                    ? "btn-primary"
+                                                    : "btn-outline-secondary")"
+                                    aria-pressed="@(currentCulture == "ar"
+                                                    ? "true"
+                                                    : "false")">
+                                AR
+                            </button>
+                        </form>
+
+                        @await Html.PartialAsync("_LoginPartial")
+                    </div>
                 </div>
             </div>
         </nav>

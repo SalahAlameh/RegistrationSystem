@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Localization; // these were added to support localization of the application
+using RegistrationSystem;                // these were added to support localization of the application
+using System.Globalization;              // these were added to support localization of the application
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RegistrationSystem.Data;
@@ -7,7 +10,24 @@ using Microsoft.AspNetCore.Identity.UI.Services; // this is needed to use the Em
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+
+// Tells the localization system that translation files
+// are stored inside the Resources folder.
+builder.Services.AddLocalization(options =>
+{
+    options.ResourcesPath = "Resources";
+});
+
+// Adds localization support to Razor views and directs
+// every model's validation messages to SharedResource.
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization(options =>
+    {
+        options.DataAnnotationLocalizerProvider =
+            (type, factory) =>
+                factory.Create(typeof(SharedResource)); // normally, ASP.NET Core searches for a different resource file for every model. This tells it to use our shared resource files for all validation messages instead
+    });
 
 builder.Services.AddRazorPages(options =>
 {
@@ -18,6 +38,30 @@ builder.Services.AddRazorPages(options =>
         "/Account/Manage/ChangePassword",
         "AdminOnly");
 }); // Identity Login and Register pages are Razor Pages, so this allows the application to use them
+
+// The application currently supports English and Arabic.
+var supportedCultures = new[]
+{
+    new CultureInfo("en"),
+    new CultureInfo("ar")
+};
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    // English is used when no language was selected.
+    options.DefaultRequestCulture =
+        new RequestCulture("en");
+
+    // Controls culture-sensitive formatting,
+    // including dates, times, and numbers.
+    options.SupportedCultures =
+        supportedCultures;
+
+    // Controls which resource file supplies
+    // the translated interface text.
+    options.SupportedUICultures =
+        supportedCultures;
+});
 
 builder.Services.AddHttpContextAccessor(); // lets ApplicationDbContext access the currently logged-in user's email
 
@@ -38,6 +82,14 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
 .AddRoles<IdentityRole>() // adds role support so accounts can belong to roles such as Admin and User
 .AddEntityFrameworkStores<ApplicationDbContext>(); // tells Identity to save users and passwords in our ApplicationDbContext database
+
+// Makes the custom MVC Login page the destination
+// used when a logged-out visitor requests a protected page.
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+});
+
 // Defines the authorization rule used by the built-in Change Password page.
 builder.Services.AddAuthorization(options =>
 {
@@ -80,6 +132,10 @@ builder.Services.AddScoped<CategoryService>(); // basically one instance of Pers
 builder.Services.AddScoped<UserService>();   // lets UsersController use the user-management service
 builder.Services.AddScoped<DashboardService>(); // lets DashboardController use the dashboard reporting service
 var app = builder.Build();
+
+// Determines the culture at the beginning of each request
+// before pages and views retrieve translated text.
+app.UseRequestLocalization();
 
 // creates the Admin and User roles and assigns the configured existing account to Admin.
 // this runs safely on every startup because IdentitySeedData checks what already exists.
