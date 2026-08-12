@@ -21,7 +21,7 @@
 
     // Keeps the user on the same page after changing
     // the language, including any query-string values.
-    var currentReturnUrl = // for example "/Identity/Account/Login?returnUrl=%2FBook"
+    var currentReturnUrl = // for example "/Account/Login?returnUrl=%2FBook"
         $"{Context.Request.PathBase}" +
         $"{Context.Request.Path}" +
         $"{Context.Request.QueryString}";

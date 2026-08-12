@@ -1,19 +1,23 @@
 ﻿@model RegistrationSystem.Models.CreateUserViewModel
 
+@* Retrieves Users-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Create User";
+    ViewData["Title"] = Localizer["CreateUserTitle"];
 }
 
 <div class="row justify-content-center">
     <div class="col-md-7 col-lg-6">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h4 class="mb-0">Create User</h4>
+                <h4 class="mb-0">@Localizer["CreateUserTitle"]</h4>
             </div>
 
             <div class="card-body">
                 <p class="text-muted">
-                    Create a login account and assign its initial role.
+                    @Localizer["CreateUserDescription"]
                 </p>
 
                 <form asp-action="Create" method="post">
@@ -24,6 +28,7 @@
                     <div class="mb-3">
                         <label asp-for="Email"
                                class="form-label">
+                            @Localizer["EmailLabel"]
                         </label>
 
                         <input asp-for="Email"
@@ -38,6 +43,7 @@
                     <div class="mb-3">
                         <label asp-for="Password"
                                class="form-label">
+                            @Localizer["PasswordLabel"]
                         </label>
 
                         <input asp-for="Password"
@@ -52,6 +58,7 @@
                     <div class="mb-3">
                         <label asp-for="ConfirmPassword"
                                class="form-label">
+                            @Localizer["ConfirmPasswordLabel"]
                         </label>
 
                         <input asp-for="ConfirmPassword"
@@ -66,11 +73,33 @@
                     <div class="mb-3">
                         <label asp-for="SelectedRole"
                                class="form-label">
+                            @Localizer["UserRoleLabel"]
                         </label>
 
                         <select asp-for="SelectedRole"
-                                asp-items="Model.Roles"
                                 class="form-select">
+                            @foreach (var role in Model.Roles)
+                            {
+                                var roleLabel = role.Value switch
+                                {
+                                    "Admin" => Localizer["AdminRoleLabel"].Value,
+                                    "User" => Localizer["UserRoleValueLabel"].Value,
+                                    _ => role.Text
+                                };
+
+                                if (role.Selected)
+                                {
+                                    <option value="@role.Value" selected>
+                                        @roleLabel
+                                    </option>
+                                }
+                                else
+                                {
+                                    <option value="@role.Value">
+                                        @roleLabel
+                                    </option>
+                                }
+                            }
                         </select>
 
                         <span asp-validation-for="SelectedRole"
@@ -81,12 +110,13 @@
                     <div class="mb-3">
                         <label asp-for="PersonId"
                                class="form-label">
+                            @Localizer["LinkedPersonLabel"]
                         </label>
 
                         <select asp-for="PersonId"
                                 asp-items="Model.Persons"
                                 class="form-select">
-                            <option value="">-- No linked person --</option>
+                            <option value="">@Localizer["NoLinkedPersonOption"]</option>
                         </select>
 
                         <span asp-validation-for="PersonId"
@@ -94,20 +124,19 @@
                         </span>
 
                         <div class="form-text">
-                            A User account must be linked to a Person.
-                            Admin accounts may remain unlinked.
+                            @Localizer["LinkedPersonHelpText"]
                         </div>
                     </div>
 
                     <div class="d-flex gap-2">
                         <button type="submit"
                                 class="btn btn-primary">
-                            Create User
+                            @Localizer["CreateUserButton"]
                         </button>
 
                         <a asp-action="Index"
                            class="btn btn-secondary">
-                            Cancel
+                            @Localizer["CancelButton"]
                         </a>
                     </div>
                 </form>

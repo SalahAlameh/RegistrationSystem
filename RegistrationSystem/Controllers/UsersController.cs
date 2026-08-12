@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using RegistrationSystem.Models;
 using RegistrationSystem.Services;
 
@@ -9,10 +10,14 @@ namespace RegistrationSystem.Controllers
     public class UsersController : Controller
     {
         private readonly UserService _userService;
+        private readonly IStringLocalizer<SharedResource> _localizer;
 
-        public UsersController(UserService userService)
+        public UsersController(
+            UserService userService,
+            IStringLocalizer<SharedResource> localizer)
         {
             _userService = userService;
+            _localizer = localizer;
         }
 
         // GET: /Users/Index
@@ -61,7 +66,9 @@ namespace RegistrationSystem.Controllers
             }
 
             TempData["SuccessMessage"] =
-                $"The account {model.Email} was created successfully.";
+                _localizer[
+                    "UserCreatedSuccessfully",
+                    model.Email].Value;
 
             return RedirectToAction(nameof(Index));
         }
@@ -112,7 +119,9 @@ namespace RegistrationSystem.Controllers
             }
 
             TempData["SuccessMessage"] =
-                $"The account {model.Email} was updated successfully.";
+                _localizer[
+                    "UserUpdatedSuccessfully",
+                    model.Email].Value;
 
             return RedirectToAction(nameof(Index));
         }
@@ -159,7 +168,9 @@ namespace RegistrationSystem.Controllers
             }
 
             TempData["SuccessMessage"] =
-                $"The password for {model.Email} was reset successfully.";
+                _localizer[
+                    "UserPasswordResetSuccessfully",
+                    model.Email].Value;
 
             return RedirectToAction(nameof(Index));
         }
@@ -180,13 +191,13 @@ namespace RegistrationSystem.Controllers
             if (!result.Succeeded)
             {
                 TempData["ErrorMessage"] =
-                    string.Join(", ", result.Errors);
+                    LocalizeErrors(result.Errors);
 
                 return RedirectToAction(nameof(Index));
             }
 
             TempData["SuccessMessage"] =
-                "The account was deactivated.";
+                _localizer["UserDeactivatedSuccessfully"].Value;
 
             return RedirectToAction(nameof(Index));
         }
@@ -207,13 +218,13 @@ namespace RegistrationSystem.Controllers
             if (!result.Succeeded)
             {
                 TempData["ErrorMessage"] =
-                    string.Join(", ", result.Errors);
+                    LocalizeErrors(result.Errors);
 
                 return RedirectToAction(nameof(Index));
             }
 
             TempData["SuccessMessage"] =
-                "The account was reactivated.";
+                _localizer["UserReactivatedSuccessfully"].Value;
 
             return RedirectToAction(nameof(Index));
         }
@@ -224,8 +235,27 @@ namespace RegistrationSystem.Controllers
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    error);
+                    LocalizeError(error));
             }
+        }
+
+        private string LocalizeErrors(
+            IEnumerable<string> errorKeys)
+        {
+            return string.Join(
+                ", ",
+                errorKeys.Select(LocalizeError));
+        }
+
+        private string LocalizeError(string errorKey)
+        {
+            var localizedError = _localizer[errorKey];
+
+            // Unknown Identity errors receive a safe localized fallback
+            // instead of displaying a raw resource key to the user.
+            return localizedError.ResourceNotFound
+                ? _localizer["UserOperationFailed"].Value
+                : localizedError.Value;
         }
     }
 }

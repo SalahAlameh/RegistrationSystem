@@ -12,28 +12,30 @@ namespace RegistrationSystem.Services
             _context = context;
         }
 
-        public DashboardViewModel GetDashboard()
+        public DashboardViewModel GetDashboard(
+            int trendMonths = 12)
         {
             var now = DateTime.UtcNow; // get the current UTC date
 
-            // Starts with the first day of the month from eleven months ago.
-            // Including the current month, this gives us twelve months in total.
+            // Keeps the selected period between one and twelve months,
+            // even if someone manually changes the value in the URL.
+            var selectedTrendMonths =
+                Math.Clamp(trendMonths, 1, 12); // if the month is less than 1, it will be set to 1, if it is greater than 12, it will be set to 12
 
-            // since today is July 30, 2026, this produces the first day fo the current month
-            // .AddMonths(-11) moves backward eleven months: 2025-08-01
+            // Starts with the first day of the earliest selected month.
+            // Subtracting one accounts for the current month being included.
             var firstMonth =
-                new DateTime(now.Year, now.Month, 1).AddMonths(-11);
+                new DateTime(now.Year, now.Month, 1)
+                    .AddMonths(-(selectedTrendMonths - 1));
 
-            // find the end of the period, starting form 2025-08-01, adding 12 months gives us 2026-08-01, which is the first day of the month after the range we want to include
-            // this date is not included in the report. it is the boundary immediately after hte 12 month period
-            // the resulting range is:
-            // BorrowDate >= 2025-08-01
-            // BorrowDate < 2026-08-01
-            var firstMonthAfterRange = firstMonth.AddMonths(12);
+            // Calculates the exclusive boundary immediately after
+            // the selected reporting period.
+            var firstMonthAfterRange =
+                firstMonth.AddMonths(selectedTrendMonths);
 
             // Gets the number of borrow records created during each month.
             var monthlyCounts = _context.Borrows
-                .Where(borrow => // only borrow records inside the selected 12 month range
+                .Where(borrow => // only borrow records inside the selected month range
                     borrow.BorrowDate >= firstMonth &&
                     borrow.BorrowDate < firstMonthAfterRange)
                 .GroupBy(borrow => new // groups them by year and month
@@ -51,13 +53,12 @@ namespace RegistrationSystem.Services
 
             // create the final chart list
             var monthlyStatistics =
-                new List<MonthlyDashboardStatisticViewModel>(); // this creates an empty list that will contain exactly 12 items
+                new List<MonthlyDashboardStatisticViewModel>(); // this creates an empty list for the selected number of months
 
-            // loop through all 12 months
-            // adds all twelve months to the result, including months
-            // that have no borrowing records.
-            for (var monthOffset = 0; // from 0
-                 monthOffset < 12; // to 11
+            // Loops through every month in the selected period.
+            // Months without borrowing records are also included.
+            for (var monthOffset = 0; // starts with the earliest month
+                 monthOffset < selectedTrendMonths; // continues through the current month
                  monthOffset++)
             {// calculate the month for the current iteration
                 var month = firstMonth.AddMonths(monthOffset);
@@ -169,6 +170,7 @@ namespace RegistrationSystem.Services
                 MostBorrowedBooks = mostBorrowedBooks, // this groups all historical borrow records by BookId and returns the five highest counts
                 TopCategories = topCategories, // this connects Borrows, Books and categories, it then groups the borrowing records by Category and selects the five most popular categories
                 ActiveUsers = activeUsers, // this chart means members who currently have books that have not been returned
+                SelectedTrendMonths = selectedTrendMonths, // this is the number of months selected for the trend chart, it is used to display the correct number of months in the chart
                 MonthlyStatistics = monthlyStatistics
             };
         }

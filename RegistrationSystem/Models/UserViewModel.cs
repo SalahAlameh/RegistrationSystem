@@ -11,7 +11,7 @@ namespace RegistrationSystem.Models
 
         public string Role { get; set; } = string.Empty;
 
-        public string LinkedPersonName { get; set; } = "Not linked";
+        public string? LinkedPersonName { get; set; }
 
         public bool IsDisabled { get; set; }
 
@@ -20,34 +20,34 @@ namespace RegistrationSystem.Models
 
     public class CreateUserViewModel
     {
-        [Required] // data annotations
-        [EmailAddress]
-        [Display(Name = "Email Address")]
+        [Required(ErrorMessage = "EmailRequired")] // data annotations
+        [EmailAddress(ErrorMessage = "EmailInvalid")]
+        [Display(Name = "EmailLabel")]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "PasswordRequired")]
         [StringLength(
             100,
             MinimumLength = 6,
-            ErrorMessage = "The password must contain at least 6 characters.")]
+            ErrorMessage = "PasswordMinimumLength")]
         [DataType(DataType.Password)] // masks the characters as the user types
         public string Password { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "ConfirmPasswordRequired")]
         [DataType(DataType.Password)]
         [Compare(
             nameof(Password),
-            ErrorMessage = "The password and confirmation password do not match.")]
-        [Display(Name = "Confirm Password")]
+            ErrorMessage = "PasswordsDoNotMatch")]
+        [Display(Name = "ConfirmPasswordLabel")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        [Required]
-        [Display(Name = "Role")]
+        [Required(ErrorMessage = "UserRoleRequired")]
+        [Display(Name = "UserRoleLabel")]
         public string SelectedRole { get; set; } = "User";
 
         // PersonId is optional for Admin accounts but required by the
         // service when the selected role is User.
-        [Display(Name = "Linked Person")]
+        [Display(Name = "LinkedPersonLabel")]
         public int? PersonId { get; set; }
 
         public List<SelectListItem> Roles { get; set; } = new();
@@ -59,18 +59,18 @@ namespace RegistrationSystem.Models
     {
         public string Id { get; set; } = string.Empty;
 
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email Address")]
+        [Required(ErrorMessage = "EmailRequired")]
+        [EmailAddress(ErrorMessage = "EmailInvalid")]
+        [Display(Name = "EmailLabel")]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
-        [Display(Name = "Role")]
+        [Required(ErrorMessage = "UserRoleRequired")]
+        [Display(Name = "UserRoleLabel")]
         public string SelectedRole { get; set; } = "User";
 
         // PersonId is optional for Admin accounts but required by the
         // service when the selected role is User.
-        [Display(Name = "Linked Person")]
+        [Display(Name = "LinkedPersonLabel")]
         public int? PersonId { get; set; }
 
         public List<SelectListItem> Roles { get; set; } = new();
@@ -82,24 +82,24 @@ namespace RegistrationSystem.Models
     {
         public string Id { get; set; } = string.Empty;
 
-        [Display(Name = "Email Address")]
+        [Display(Name = "EmailLabel")]
         public string Email { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "NewPasswordRequired")]
         [StringLength(
             100,
             MinimumLength = 6,
-            ErrorMessage = "The password must contain at least 6 characters.")]
+            ErrorMessage = "PasswordMinimumLength")]
         [DataType(DataType.Password)]
-        [Display(Name = "New Password")]
+        [Display(Name = "NewPasswordLabel")]
         public string NewPassword { get; set; } = string.Empty;
 
-        [Required]
+        [Required(ErrorMessage = "ConfirmNewPasswordRequired")]
         [DataType(DataType.Password)]
         [Compare(
             nameof(NewPassword),
-            ErrorMessage = "The password and confirmation password do not match.")]
-        [Display(Name = "Confirm New Password")]
+            ErrorMessage = "PasswordsDoNotMatch")]
+        [Display(Name = "ConfirmNewPasswordLabel")]
         public string ConfirmNewPassword { get; set; } = string.Empty;
     }
 

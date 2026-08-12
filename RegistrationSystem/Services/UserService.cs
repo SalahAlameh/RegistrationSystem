@@ -13,6 +13,8 @@ namespace RegistrationSystem.Services
 
         public bool NotFound { get; init; }
 
+        // Stores resource keys so the controller can translate errors
+        // using the language selected for the current request.
         public List<string> Errors { get; init; } = new();
 
         public static UserOperationResult Success()
@@ -91,12 +93,12 @@ namespace RegistrationSystem.Services
                     Id = identityUser.Id,
                     Email = identityUser.Email
                         ?? identityUser.UserName
-                        ?? "No email",
+                        ?? string.Empty,
                     Role = roles.Any()
                         ? string.Join(", ", roles)
-                        : "No role",
+                        : string.Empty,
                     LinkedPersonName =
-                        linkedPersonName ?? "Not linked", // each user view model receives the linked person's name
+                        linkedPersonName, // each user view model receives the linked person's name
                     IsDisabled = // determines whether the account is currently deactivated
                         identityUser.LockoutEnd.HasValue && // checks whether LockoutEnd has a date
                         identityUser.LockoutEnd.Value > DateTimeOffset.UtcNow, // checks whether that date is in the future
@@ -227,14 +229,14 @@ namespace RegistrationSystem.Services
                     model.SelectedRole))
             {
                 return UserOperationResult.Failed(
-                    "The selected role does not exist.");
+                    "UserSelectedRoleNotFound");
             }
 
             if (model.SelectedRole == "User" && // regular users must be linked to a person
                 !model.PersonId.HasValue)
             {
                 return UserOperationResult.Failed(
-                    "A User account must be linked to a person.");
+                    "UserAccountRequiresLinkedPerson");
             }
 
             Person? selectedPerson = null;
@@ -249,13 +251,13 @@ namespace RegistrationSystem.Services
                 if (selectedPerson == null)
                 {
                     return UserOperationResult.Failed(
-                        "The selected person does not exist or is archived.");
+                        "UserSelectedPersonUnavailable");
                 }
 
                 if (selectedPerson.IdentityUserId != null) // this protects the one account per person rule
                 {
                     return UserOperationResult.Failed(
-                        "The selected person is already linked to another account.");
+                        "UserPersonAlreadyLinked");
                 }
             }
 
@@ -313,7 +315,7 @@ namespace RegistrationSystem.Services
                     await _userManager.DeleteAsync(identityUser);
 
                     return UserOperationResult.Failed(
-                        "The account could not be linked to the selected person.");
+                        "UserLinkFailed");
                 }
             }
 
@@ -337,7 +339,7 @@ namespace RegistrationSystem.Services
                     model.SelectedRole))
             {
                 return UserOperationResult.Failed(
-                    "The selected role does not exist.");
+                    "UserSelectedRoleNotFound");
             }
 
             var currentUserId =
@@ -349,14 +351,14 @@ namespace RegistrationSystem.Services
                 model.SelectedRole != "Admin")
             {
                 return UserOperationResult.Failed(
-                    "You cannot remove your own Admin role.");
+                    "UserCannotRemoveOwnAdminRole");
             }
 
             if (model.SelectedRole == "User" &&
                 !model.PersonId.HasValue)
             {
                 return UserOperationResult.Failed(
-                    "A User account must be linked to a person.");
+                    "UserAccountRequiresLinkedPerson");
             }
 
             var currentlyLinkedPerson = await _context.Persons
@@ -375,14 +377,14 @@ namespace RegistrationSystem.Services
                 if (selectedPerson == null)
                 {
                     return UserOperationResult.Failed(
-                        "The selected person does not exist or is archived.");
+                        "UserSelectedPersonUnavailable");
                 }
 
                 if (selectedPerson.IdentityUserId != null &&
                     selectedPerson.IdentityUserId != identityUser.Id)
                 {
                     return UserOperationResult.Failed(
-                        "The selected person is already linked to another account.");
+                        "UserPersonAlreadyLinked");
                 }
             }
 
@@ -476,7 +478,7 @@ namespace RegistrationSystem.Services
                 catch (DbUpdateException)
                 {
                     return UserOperationResult.Failed(
-                        "The account could not be linked to the selected person.");
+                        "UserLinkFailed");
                 }
             }
 
@@ -500,7 +502,7 @@ namespace RegistrationSystem.Services
                 Id = identityUser.Id,
                 Email = identityUser.Email
                     ?? identityUser.UserName
-                    ?? "No email"
+                    ?? string.Empty
             };
         }
 
@@ -523,7 +525,7 @@ namespace RegistrationSystem.Services
                 _userManager.GetUserId(currentUser))
             {
                 return UserOperationResult.Failed(
-                    "Use Change Password to change your own password.");
+                    "UserUseChangePasswordForOwnAccount");
             }
 
             // Identity requires a secure, temporary reset token before it
@@ -565,7 +567,7 @@ namespace RegistrationSystem.Services
                 _userManager.GetUserId(currentUser))
             {
                 return UserOperationResult.Failed(
-                    "You cannot deactivate your own account.");
+                    "UserCannotDeactivateOwnAccount");
             }
 
             identityUser.LockoutEnabled = true;
@@ -620,7 +622,7 @@ namespace RegistrationSystem.Services
             return new UserOperationResult
             {
                 Errors = result.Errors
-                    .Select(error => error.Description)
+                    .Select(error => error.Code)
                     .ToList()
             };
         }

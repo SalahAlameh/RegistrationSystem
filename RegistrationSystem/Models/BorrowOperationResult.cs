@@ -4,7 +4,9 @@ namespace RegistrationSystem.Models
     {
         public bool Succeeded { get; private set; }
         public bool NotFound { get; private set; }
-        public string? ErrorMessage { get; private set; }
+        // The service returns a resource key so the controller can
+        // translate it using the language selected for this request.
+        public string? ErrorKey { get; private set; }
 
         public static BorrowOperationResult Success()
         {
@@ -14,20 +16,20 @@ namespace RegistrationSystem.Models
             };
         }
 
-        public static BorrowOperationResult Failed(string errorMessage)
+        public static BorrowOperationResult Failed(string errorKey)
         {
             return new BorrowOperationResult
             {
-                ErrorMessage = errorMessage
+                ErrorKey = errorKey
             };
         }
 
-        public static BorrowOperationResult NotFoundResult(string errorMessage)
+        public static BorrowOperationResult NotFoundResult(string errorKey)
         {
             return new BorrowOperationResult
             {
                 NotFound = true,
-                ErrorMessage = errorMessage
+                ErrorKey = errorKey
             };
         }
     }

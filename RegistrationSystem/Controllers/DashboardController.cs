@@ -17,10 +17,13 @@ namespace RegistrationSystem.Controllers
 
         // GET: /Dashboard/Index
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult Index(
+            int trendMonths = 12)
         {
+            // Passes the administrator's selected chart period
+            // to the dashboard service.
             var dashboard =
-                _dashboardService.GetDashboard();
+                _dashboardService.GetDashboard(trendMonths);
 
             return View(dashboard);
         }

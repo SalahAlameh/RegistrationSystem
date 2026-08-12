@@ -51,7 +51,7 @@ namespace RegistrationSystem.Services
                 if (person == null)
                 {
                     return BorrowOperationResult.Failed(
-                        "The selected person does not exist or is archived.");
+                        "BorrowSelectedPersonUnavailable");
                 }
             }
             else
@@ -63,7 +63,7 @@ namespace RegistrationSystem.Services
                 if (person == null)
                 {
                     return BorrowOperationResult.Failed(
-                        "Your account is not linked to an active person. Contact an administrator before borrowing.");
+                        "BorrowAccountNotLinked");
                 }
             }
 
@@ -74,13 +74,13 @@ namespace RegistrationSystem.Services
             if (book == null)
             {
                 return BorrowOperationResult.Failed(
-                    "The selected book does not exist or is archived.");
+                    "BorrowSelectedBookUnavailable");
             }
 
             if (book.Copies < 1)
             {
                 return BorrowOperationResult.Failed(
-                    "This book is out of stock and cannot be borrowed.");
+                    "BorrowBookOutOfStock");
             }
 
             int activeBorrows =
@@ -89,7 +89,7 @@ namespace RegistrationSystem.Services
             if (activeBorrows >= 3)
             {
                 return BorrowOperationResult.Failed(
-                    "This person already has 3 active borrows and cannot borrow more until one is returned.");
+                    "BorrowActiveLimitReached");
             }
 
             var borrowDate = DateTime.UtcNow;
@@ -175,7 +175,7 @@ namespace RegistrationSystem.Services
             if (borrow == null)
             {
                 return BorrowOperationResult.NotFoundResult(
-                    "The borrow record does not exist.");
+                    "BorrowRecordNotFound");
             }
 
             if (!currentUser.IsInRole("Admin"))
@@ -193,20 +193,20 @@ namespace RegistrationSystem.Services
                     // NotFound avoids revealing whether another
                     // Person's Borrow record exists.
                     return BorrowOperationResult.NotFoundResult(
-                        "The borrow record does not exist.");
+                        "BorrowRecordNotFound");
                 }
             }
 
             if (borrow.ReturnDate != null)
             {
                 return BorrowOperationResult.Failed(
-                    "This book has already been returned.");
+                    "BorrowAlreadyReturned");
             }
 
             if (borrow.Book == null)
             {
                 return BorrowOperationResult.Failed(
-                    "The book connected to this borrow record could not be found.");
+                    "BorrowConnectedBookNotFound");
             }
 
             // The old method took the already-fetched Borrow object because

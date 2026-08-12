@@ -1,10 +1,14 @@
 ﻿@model List<RegistrationSystem.Models.Borrow>
 
+@* Retrieves Borrowing-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Borrowed Books";
+    ViewData["Title"] = Localizer["BorrowedBooksTitle"];
 }
 
-<h2>Borrowed Books</h2>
+<h2>@Localizer["BorrowedBooksTitle"]</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -23,13 +27,13 @@
 <table class="table table-striped table-bordered">
     <thead class="table-dark">
         <tr>
-            <th>Person</th>
-            <th>Book</th>
-            <th>Borrow Date</th>
-            <th>Due Date</th>
-            <th>Return Date</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th>@Localizer["BorrowPersonLabel"]</th>
+            <th>@Localizer["BorrowBookLabel"]</th>
+            <th>@Localizer["BorrowDateLabel"]</th>
+            <th>@Localizer["DueDateLabel"]</th>
+            <th>@Localizer["ReturnDateLabel"]</th>
+            <th>@Localizer["BorrowStatusLabel"]</th>
+            <th>@Localizer["ActionsLabel"]</th>
         </tr>
     </thead>
     <tbody>
@@ -47,7 +51,7 @@
                 <td>
                     @(borrow.ReturnDate.HasValue
                     ? $"{borrow.ReturnDate.Value:yyyy-MM-dd HH:mm} UTC"
-                    : "Not returned")
+                    : Localizer["NotReturnedLabel"])
                 </td>
 
                 <td>
@@ -55,23 +59,23 @@
                     {
                         @if (borrow.DueDate < DateTime.UtcNow)
                         {
-                            <span class="badge bg-warning text-dark">Overdue</span>
+                            <span class="badge bg-warning text-dark">@Localizer["OverdueStatus"]</span>
                         }
                         else
                         {
-                            <span class="badge bg-danger">Active</span>
+                            <span class="badge bg-danger">@Localizer["ActiveStatus"]</span>
                         }
                     }
                     else
                     {
-                        <span class="badge bg-success">Returned</span>
+                        <span class="badge bg-success">@Localizer["ReturnedStatus"]</span>
                     }
                 </td>
                 <td>
                     @if (borrow.ReturnDate == null)
                     {
                         <form asp-action="ReturnBook" asp-route-id="@borrow.Id" method="post" class="d-inline">
-                            <button type="submit" class="btn btn-sm btn-primary">Return</button>
+                            <button type="submit" class="btn btn-sm btn-primary">@Localizer["ReturnButton"]</button>
                         </form>
                     }
                     else

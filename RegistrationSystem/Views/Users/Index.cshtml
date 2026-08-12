@@ -1,19 +1,32 @@
 ﻿@model List<RegistrationSystem.Models.UserListViewModel>
 
+@using System.Text.Json
+
+@* Retrieves Users-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Users Management";
+    ViewData["Title"] = Localizer["UsersManagementTitle"];
+
+    string GetRoleLabel(string role) => role switch
+    {
+        "Admin" => Localizer["AdminRoleLabel"].Value,
+        "User" => Localizer["UserRoleValueLabel"].Value,
+        _ => role
+    };
 }
 
 <div class="d-flex justify-content-between align-items-center mb-3">
     <div>
-        <h2>Users Management</h2>
+        <h2>@Localizer["UsersManagementTitle"]</h2>
         <p class="text-muted mb-0">
-            Create accounts, assign roles, and control account access.
+            @Localizer["UsersManagementDescription"]
         </p>
     </div>
 
     <a asp-action="Create" class="btn btn-primary">
-        Create User
+        @Localizer["CreateUserButton"]
     </a>
 </div>
 
@@ -26,7 +39,7 @@
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="alert"
-                aria-label="Close">
+                aria-label="@Localizer["CloseButtonLabel"]">
         </button>
     </div>
 }
@@ -40,7 +53,7 @@
         <button type="button"
                 class="btn-close"
                 data-bs-dismiss="alert"
-                aria-label="Close">
+                aria-label="@Localizer["CloseButtonLabel"]">
         </button>
     </div>
 }
@@ -51,11 +64,11 @@
             <table class="table table-striped table-hover mb-0">
                 <thead class="table-dark">
                     <tr>
-                        <th>Email</th>
-                        <th>Role</th>
-                        <th>Linked Person</th>
-                        <th>Status</th>
-                        <th class="text-end">Actions</th>
+                        <th>@Localizer["EmailLabel"]</th>
+                        <th>@Localizer["UserRoleLabel"]</th>
+                        <th>@Localizer["LinkedPersonLabel"]</th>
+                        <th>@Localizer["UserStatusLabel"]</th>
+                        <th class="text-end">@Localizer["ActionsLabel"]</th>
                     </tr>
                 </thead>
 
@@ -66,27 +79,38 @@
                         {
                             <tr>
                                 <td class="align-middle">
-                                    @user.Email
+                                    @(string.IsNullOrWhiteSpace(user.Email)
+                                        ? Localizer["NoEmailLabel"]
+                                        : user.Email)
 
                                     @if (user.IsCurrentUser)
                                     {
                                         <span class="badge bg-info text-dark ms-1">
-                                            You
+                                            @Localizer["CurrentUserBadge"]
                                         </span>
                                     }
                                 </td>
 
                                 <td class="align-middle">
                                     <span class="badge bg-secondary">
-                                        @user.Role
+                                        @(string.IsNullOrWhiteSpace(user.Role)
+                                            ? Localizer["NoRoleLabel"]
+                                            : string.Join(
+                                                ", ",
+                                                user.Role
+                                                    .Split(
+                                                        ',',
+                                                        StringSplitOptions.RemoveEmptyEntries)
+                                                    .Select(role =>
+                                                        GetRoleLabel(role.Trim()))))
                                     </span>
                                 </td>
 
                                 <td class="align-middle">
-                                    @if (user.LinkedPersonName == "Not linked")
+                                    @if (string.IsNullOrWhiteSpace(user.LinkedPersonName))
                                     {
                                         <span class="text-muted">
-                                            Not linked
+                                            @Localizer["NotLinkedLabel"]
                                         </span>
                                     }
                                     else
@@ -99,13 +123,13 @@
                                     @if (user.IsDisabled)
                                     {
                                         <span class="badge bg-danger">
-                                            Deactivated
+                                            @Localizer["DeactivatedStatus"]
                                         </span>
                                     }
                                     else
                                     {
                                         <span class="badge bg-success">
-                                            Active
+                                            @Localizer["ActiveStatus"]
                                         </span>
                                     }
                                 </td>
@@ -114,7 +138,7 @@
                                     <a asp-action="Edit"
                                        asp-route-id="@user.Id"
                                        class="btn btn-sm btn-warning">
-                                        Edit
+                                        @Localizer["EditButton"]
                                     </a>
 
                                     @if (!user.IsCurrentUser)
@@ -122,15 +146,15 @@
                                         <a asp-action="ResetPassword"
                                            asp-route-id="@user.Id"
                                            class="btn btn-sm btn-outline-primary">
-                                            Reset Password
+                                            @Localizer["ResetPasswordButton"]
                                         </a>
                                     }
                                     else
                                     {
-                                        <a asp-area="Identity"
-                                           asp-page="/Account/Manage/ChangePassword"
+                                        <a asp-controller="Account"
+                                           asp-action="ChangePassword"
                                            class="btn btn-sm btn-outline-primary">
-                                            Change Password
+                                            @Localizer["ChangePasswordLink"]
                                         </a>
                                     }
 
@@ -142,7 +166,7 @@
                                               class="d-inline">
                                             <button type="submit"
                                                     class="btn btn-sm btn-success">
-                                                Reactivate
+                                                @Localizer["ReactivateButton"]
                                             </button>
                                         </form>
                                     }
@@ -154,7 +178,7 @@
                                                 data-bs-target="#disableUserModal"
                                                 data-id="@user.Id"
                                                 data-email="@user.Email">
-                                            Deactivate
+                                            @Localizer["DeactivateButton"]
                                         </button>
                                     }
                                     else
@@ -162,8 +186,8 @@
                                         <button type="button"
                                                 class="btn btn-sm btn-outline-secondary"
                                                 disabled
-                                                title="You cannot deactivate your own account.">
-                                            Deactivate
+                                                title="@Localizer["CannotDeactivateOwnAccountTooltip"]">
+                                            @Localizer["DeactivateButton"]
                                         </button>
                                     }
                                 </td>
@@ -175,7 +199,7 @@
                         <tr>
                             <td colspan="5"
                                 class="text-center text-muted py-4">
-                                No user accounts were found.
+                                @Localizer["NoUserAccountsMessage"]
                             </td>
                         </tr>
                     }
@@ -193,22 +217,20 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Deactivation</h5>
+                <h5 class="modal-title">@Localizer["ConfirmDeactivationTitle"]</h5>
 
                 <button type="button"
                         class="btn-close"
                         data-bs-dismiss="modal"
-                        aria-label="Close">
+                        aria-label="@Localizer["CloseButtonLabel"]">
                 </button>
             </div>
 
             <div class="modal-body">
-                Are you sure you want to deactivate
-                <strong id="disableUserEmail"></strong>?
+                <div id="disableUserConfirmationMessage"></div>
 
                 <p class="text-muted mt-2 mb-0">
-                    The user will not be able to log in until the account
-                    is reactivated.
+                    @Localizer["DeactivationExplanation"]
                 </p>
             </div>
 
@@ -216,7 +238,7 @@
                 <button type="button"
                         class="btn btn-secondary"
                         data-bs-dismiss="modal">
-                    Cancel
+                    @Localizer["CancelButton"]
                 </button>
 
                 <form id="disableUserForm"
@@ -228,7 +250,7 @@
 
                     <button type="submit"
                             class="btn btn-danger">
-                        Deactivate
+                        @Localizer["DeactivateButton"]
                     </button>
                 </form>
             </div>
@@ -238,6 +260,10 @@
 
 @section Scripts {
     <script>
+        var disableUserConfirmationTemplate =
+            @Html.Raw(JsonSerializer.Serialize(
+                Localizer["DisableUserConfirmationMessage"].Value));
+
         var disableUserModal =
             document.getElementById('disableUserModal');
 
@@ -251,8 +277,14 @@
                 document.getElementById('disableUserId').value =
                     userId;
 
-                document.getElementById('disableUserEmail').textContent =
-                    userEmail;
+                document.getElementById(
+                    'disableUserConfirmationMessage'
+                ).textContent =
+                    disableUserConfirmationTemplate.replace(
+                        '{0}',
+                        function() {
+                            return userEmail;
+                        });
             });
     </script>
 }

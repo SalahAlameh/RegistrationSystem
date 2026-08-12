@@ -29,16 +29,6 @@ builder.Services.AddControllersWithViews()
                 factory.Create(typeof(SharedResource)); // normally, ASP.NET Core searches for a different resource file for every model. This tells it to use our shared resource files for all validation messages instead
     });
 
-builder.Services.AddRazorPages(options =>
-{
-    // Only administrators can open the Change Password page
-    // inside the Identity area.    
-    options.Conventions.AuthorizeAreaPage(
-        "Identity",
-        "/Account/Manage/ChangePassword",
-        "AdminOnly");
-}); // Identity Login and Register pages are Razor Pages, so this allows the application to use them
-
 // The application currently supports English and Arabic.
 var supportedCultures = new[]
 {
@@ -68,7 +58,7 @@ builder.Services.AddHttpContextAccessor(); // lets ApplicationDbContext access t
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// IdentityUser is Microsoft's built-in class for storing user information such as username, email, and password. It is stored in the AspNetUsers table in the database. The AddDefaultIdentity method adds all the services needed for Identity to work, including the login and register pages
+// IdentityUser is Microsoft's built-in class for storing user information such as username, email, and password. It is stored in the AspNetUsers table in the database. AddDefaultIdentity adds the secure account, password, token, and sign-in services used by the custom MVC account pages.
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 {
     options.SignIn.RequireConfirmedAccount = false; // users can log in immediately after registering; email confirmation is not needed for this school project
@@ -88,23 +78,17 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
-// Defines the authorization rule used by the built-in Change Password page.
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminOnly", policy =>
-    {
-        policy.RequireRole("Admin");
-    });
-}); // this protects the actual page even if a regualr User manually types the URL
+builder.Services.AddAuthorization();
 
 // Loads Gmail SMTP settings from User Secrets.
 builder.Services.Configure<GmailOptions>(
     builder.Configuration.GetSection("Gmail"));
 
-// Makes Gmail the email sender used by Identity's
-// Register, Forgot Password, and Reset Password pages.
+// Makes Gmail the email sender used by the custom
+// Forgot Password and Reset Password workflow.
 builder.Services.AddTransient<
     IEmailSender,
     EmailSender>();
@@ -162,7 +146,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Book}/{action=Index}/{id?}") // the main page is now View Books instead of Person Registration
     .WithStaticAssets();
-
-app.MapRazorPages(); // makes all razor pages in the project accessible through web URLs
 
 app.Run();

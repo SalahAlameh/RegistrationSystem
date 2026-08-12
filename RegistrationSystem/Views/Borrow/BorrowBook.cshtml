@@ -1,10 +1,16 @@
 ﻿@model RegistrationSystem.Models.BorrowViewModel
 
+@using System.Text.Json
+
+@* Retrieves Borrowing-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Borrow a Book";
+    ViewData["Title"] = Localizer["BorrowBookPageTitle"];
 }
 
-<h2>Borrow a Book</h2>
+<h2>@Localizer["BorrowBookPageTitle"]</h2>
 
 <div asp-validation-summary="All" class="text-danger"></div>
 
@@ -15,13 +21,14 @@
         <div class="mb-3">
             <label asp-for="PersonId"
                    class="form-label">
+                @Localizer["BorrowPersonLabel"]
             </label>
 
             <select asp-for="PersonId"
                     asp-items="Model.Persons"
                     class="form-select">
                 <option value="">
-                    -- Select Person --
+                    @Localizer["SelectPersonOption"]
                 </option>
             </select>
 
@@ -35,7 +42,7 @@
         @* A regular User's Person is selected automatically. *@
         <div class="mb-3">
             <label class="form-label">
-                Person
+                @Localizer["BorrowPersonLabel"]
             </label>
 
             <input asp-for="PersonId"
@@ -47,7 +54,7 @@
                    readonly />
 
             <div class="form-text">
-                Your account is linked to this Person.
+                @Localizer["AccountLinkedToPersonMessage"]
             </div>
         </div>
     }
@@ -55,8 +62,7 @@
     {
         <div class="alert alert-danger"
              role="alert">
-            Your account is not linked to an active Person.
-            Contact an administrator before borrowing.
+            @Localizer["BorrowAccountNotLinked"]
         </div>
     }
 
@@ -65,14 +71,14 @@
         <div class="mb-3">
             <label asp-for="CategoryId"
                    class="form-label">
-                Filter by Category
+                @Localizer["FilterByCategoryLabel"]
             </label>
 
             <select asp-for="CategoryId"
                     asp-items="Model.Categories"
                     class="form-select">
                 <option value="">
-                    -- All Categories --
+                    @Localizer["AllCategoriesOption"]
                 </option>
             </select>
         </div>
@@ -80,13 +86,14 @@
         <div class="mb-3">
             <label asp-for="BookId"
                    class="form-label">
+                @Localizer["BorrowBookLabel"]
             </label>
 
             <select asp-for="BookId"
                     asp-items="Model.Books"
                     class="form-select">
                 <option value="">
-                    -- Select Book --
+                    @Localizer["SelectBookOption"]
                 </option>
             </select>
 
@@ -97,7 +104,7 @@
 
         <button type="submit"
                 class="btn btn-primary">
-            Borrow
+            @Localizer["BorrowButton"]
         </button>
     }
 </form>
@@ -108,6 +115,11 @@
     }
 
     <script>
+        // JSON serialization safely places the translated prompt in JavaScript.
+        var selectBookText =
+            @Html.Raw(JsonSerializer.Serialize(
+                Localizer["SelectBookOption"].Value));
+
         $(document).ready(function () {
             $('#CategoryId').on('change', function() { // this whole block only runs the moment the user picks a different category, not on page load
                 var selectedCategoryId = $(this).val(); // grabs whatever the user just picked (or "" if they picked "-- All Categories --")
@@ -115,7 +127,7 @@
                 $.getJSON('/Borrow/GetBooksByCategory', { categoryId: selectedCategoryId }, function(books) { // it sends a background request to the endpoint from Step 3, without reloading the page, and once the server responds with the JSON array, the function in the last argument runs with that data
                     var bookDropdown = $('#BookId');
                     bookDropdown.empty(); // wipes out whatever options the Book dropdown currently has, since we're about to replace them
-                    bookDropdown.append($('<option></option>').val('').text('-- Select Book --')); // re-adds the placeholder option first, same as it had originally
+                    bookDropdown.append($('<option></option>').val('').text(selectBookText)); // re-adds the localized placeholder option first, same as it had originally
 
                     $.each(books, function (index, book) {
                         bookDropdown.append($('<option></option>').val(book.value).text(book.text)); // jQuery's loop helper; walks through every {value, text} object the server sent back and builds a real <option> for each one

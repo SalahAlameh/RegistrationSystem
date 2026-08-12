@@ -156,9 +156,51 @@ runs on the server before the HTML is sent to the browser*@
     <div class="col-lg-8">
         <div class="card h-100">
             <div class="card-body">
-                <h5 class="card-title">
-                    @Localizer["BorrowingTrendsTitle"]
-                </h5>
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-3">
+                    <h5 class="card-title mb-0">
+                        @Localizer["BorrowingTrendsTitle"]
+                    </h5>
+
+                    @* Reloads the dashboard using the selected
+                        borrowing-trend period. *@
+                    <form asp-controller="Dashboard"
+                          asp-action="Index"
+                          method="get"
+                          class="d-flex flex-wrap align-items-end gap-2">
+
+                        <div>
+                            <label for="trendMonths"
+                                   class="form-label mb-1">
+                                @Localizer["TrendPeriodLabel"]
+                            </label>
+
+                            <select id="trendMonths"
+                                    name="trendMonths"
+                                    class="form-select">
+                                @for (var month = 1; month <= 12; month++)
+                                {
+                                    if (month == Model.SelectedTrendMonths)
+                                    {
+                                        <option value="@month" selected>
+                                            @month
+                                        </option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@month">
+                                            @month
+                                        </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary">
+                            @Localizer["ApplyFilterButton"]
+                        </button>
+                    </form>
+                </div>
 
                 <div style="height: 320px;">
                     <canvas id="borrowingTrendsChart">
@@ -295,7 +337,7 @@ runs on the server before the HTML is sent to the browser*@
             chartIsRightToLeft ? 'rtl' : 'ltr';
 
         // Line chart showing borrowing activity during
-        // each of the latest twelve months.
+        // the administrator's selected monthly period.
         new Chart(
             document.getElementById('borrowingTrendsChart'),
             {

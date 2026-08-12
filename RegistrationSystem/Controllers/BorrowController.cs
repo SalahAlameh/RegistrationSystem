@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 using RegistrationSystem.Models;
 using RegistrationSystem.Services;
 
@@ -13,12 +14,20 @@ namespace RegistrationSystem.Controllers
         private readonly PersonService _personService; // takes the 4 services to fetch the lists of people/books for the dropdown
         private readonly BookService _bookService;     //  
         private readonly CategoryService _categoryService; //
-        public BorrowController(BorrowService borrowService, PersonService personService, BookService bookService, CategoryService categoryService)
+        private readonly IStringLocalizer<SharedResource> _localizer;
+
+        public BorrowController(
+            BorrowService borrowService,
+            PersonService personService,
+            BookService bookService,
+            CategoryService categoryService,
+            IStringLocalizer<SharedResource> localizer)
         {
             _borrowService = borrowService;
             _personService = personService;
             _bookService = bookService;
             _categoryService = categoryService;
+            _localizer = localizer;
         }
 
         // GET: /Borrow/BorrowBook
@@ -42,22 +51,24 @@ namespace RegistrationSystem.Controllers
             }
 
             var result = _borrowService.BorrowBook(
-                model.PersonId,
-                model.BookId,
+                model.PersonId!.Value,
+                model.BookId!.Value,
                 User); // User is the authenticated ClaimsPrincipal provided by the base MVC controller
 
             if (!result.Succeeded)
             {
                 ModelState.AddModelError(
                     string.Empty,
-                    result.ErrorMessage ?? "The book could not be borrowed.");
+                    _localizer[
+                        result.ErrorKey ??
+                        "BorrowFailed"].Value);
 
                 PopulateDropdowns(model);
                 return View(model);
             }
 
             TempData["SuccessMessage"] =
-                "The book was borrowed successfully.";
+                _localizer["BorrowSucceeded"].Value;
 
             return RedirectToAction(nameof(ViewBorrowedBooks));
         }
@@ -99,13 +110,15 @@ namespace RegistrationSystem.Controllers
             if (!result.Succeeded)
             {
                 TempData["ErrorMessage"] =
-                    result.ErrorMessage ?? "The book could not be returned.";
+                    _localizer[
+                        result.ErrorKey ??
+                        "ReturnFailed"].Value;
 
                 return RedirectToAction(nameof(ViewBorrowedBooks));
             }
 
             TempData["SuccessMessage"] =
-                "The book was returned successfully.";
+                _localizer["ReturnSucceeded"].Value;
 
             return RedirectToAction(nameof(ViewBorrowedBooks));
         }

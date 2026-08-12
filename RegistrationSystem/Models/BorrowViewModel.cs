@@ -6,9 +6,9 @@ namespace RegistrationSystem.Models
 {
     public class BorrowViewModel
     {
-        [Required(ErrorMessage = "Please select a person.")] // basically saying "this cant be left empty"
-        [Display(Name = "Person")] // shows the label "Person" in the view
-        public int PersonId { get; set; } // this and the BookId are what the user is choosing (what actually gets saved)
+        [Required(ErrorMessage = "BorrowPersonRequired")] // basically saying "this cant be left empty"
+        [Display(Name = "BorrowPersonLabel")] // shows the localized Person label in the view
+        public int? PersonId { get; set; } // this and the BookId are what the user is choosing (what actually gets saved)
 
         // true for an Admin who may select any Person.
         // false for a regular User whose Person is selected automatically.
@@ -20,10 +20,11 @@ namespace RegistrationSystem.Models
         // false when the logged-in account has no active linked Person.
         public bool CanBorrow { get; set; } = true;
 
-        [Required(ErrorMessage = "Please select a book.")]
-        [Display(Name = "Book")]
-        public int BookId { get; set; }
+        [Required(ErrorMessage = "BorrowBookRequired")]
+        [Display(Name = "BorrowBookLabel")]
+        public int? BookId { get; set; }
 
+        [Display(Name = "FilterByCategoryLabel")]
         public int? CategoryId { get; set; }
 
 
