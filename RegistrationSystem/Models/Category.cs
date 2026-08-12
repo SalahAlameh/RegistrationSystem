@@ -14,8 +14,11 @@ namespace RegistrationSystem.Models
         public bool IsDeleted { get; set; } = false; // false means the category is active; true means the category is archived
         public DateTime? DeletedAt { get; set; } // stores when the category was archived; null means it has never been archived
 
-        [Required]
-        [StringLength(50)]
+        [Display(Name = "CategoryNameLabel")]
+        [Required(ErrorMessage = "CategoryNameRequired")]
+        [StringLength(
+            50,
+            ErrorMessage = "CategoryNameMaximumLength")]
         public string Name { get; set; }
 
         public ICollection<Book> Books { get; set; } = new List<Book>();

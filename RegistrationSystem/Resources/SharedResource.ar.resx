@@ -219,4 +219,346 @@
   <data name="ActiveBorrowingsChartLabel" xml:space="preserve">
     <value>عمليات الاستعارة النشطة</value>
   </data>
+  <data name="ToggleNavigationLabel" xml:space="preserve">
+    <value>تبديل قائمة التنقل</value>
+  </data>
+  <data name="NavigationViewBooks" xml:space="preserve">
+    <value>عرض الكتب</value>
+  </data>
+  <data name="NavigationDashboard" xml:space="preserve">
+    <value>لوحة المعلومات</value>
+  </data>
+  <data name="NavigationRegisteredPersons" xml:space="preserve">
+    <value>الأشخاص المسجلون</value>
+  </data>
+  <data name="NavigationBorrowedBooks" xml:space="preserve">
+    <value>الكتب المستعارة</value>
+  </data>
+  <data name="NavigationArchive" xml:space="preserve">
+    <value>الأرشيف</value>
+  </data>
+  <data name="NavigationUsers" xml:space="preserve">
+    <value>المستخدمون</value>
+  </data>
+  <data name="SwitchToEnglishLabel" xml:space="preserve">
+    <value>التبديل إلى الإنجليزية</value>
+  </data>
+  <data name="SwitchToArabicLabel" xml:space="preserve">
+    <value>التبديل إلى العربية</value>
+  </data>
+  <data name="PrivacyLink" xml:space="preserve">
+    <value>الخصوصية</value>
+  </data>
+  <data name="HelloGreeting" xml:space="preserve">
+    <value>مرحبًا {0}!</value>
+  </data>
+  <data name="ChangePasswordLink" xml:space="preserve">
+    <value>تغيير كلمة المرور</value>
+  </data>
+  <data name="LogoutButton" xml:space="preserve">
+    <value>تسجيل الخروج</value>
+  </data>
+  <data name="SignUpLink" xml:space="preserve">
+    <value>إنشاء حساب</value>
+  </data>
+  <data name="LoginLink" xml:space="preserve">
+    <value>تسجيل الدخول</value>
+  </data>
+  <data name="DeleteModalTitle" xml:space="preserve">
+    <value>تأكيد الحذف</value>
+  </data>
+  <data name="CloseButtonLabel" xml:space="preserve">
+    <value>إغلاق</value>
+  </data>
+  <data name="DeleteConfirmationMessage" xml:space="preserve">
+    <value>هل أنت متأكد من أنك تريد حذف {0}؟ لا يمكن التراجع عن هذا الإجراء.</value>
+  </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>إلغاء</value>
+  </data>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="ErrorPageTitle" xml:space="preserve">
+    <value>خطأ</value>
+  </data>
+  <data name="ErrorHeading" xml:space="preserve">
+    <value>خطأ.</value>
+  </data>
+  <data name="ErrorProcessingMessage" xml:space="preserve">
+    <value>حدث خطأ أثناء معالجة طلبك.</value>
+  </data>
+  <data name="RequestIdLabel" xml:space="preserve">
+    <value>معرّف الطلب:</value>
+  </data>
+  <data name="DevelopmentModeHeading" xml:space="preserve">
+    <value>وضع التطوير</value>
+  </data>
+  <data name="DevelopmentModeDescription" xml:space="preserve">
+    <value>سيؤدي التبديل إلى بيئة التطوير إلى عرض معلومات أكثر تفصيلًا حول الخطأ الذي حدث.</value>
+  </data>
+  <data name="DevelopmentModeWarning" xml:space="preserve">
+    <value>يجب عدم تمكين بيئة التطوير في التطبيقات المنشورة لأنها قد تعرض معلومات حساسة عن الأخطاء للمستخدمين.</value>
+  </data>
+  <data name="DevelopmentModeInstructions" xml:space="preserve">
+    <value>لأغراض التصحيح المحلي، عيّن {0} إلى {1} ثم أعد تشغيل التطبيق.</value>
+  </data>
+  <data name="PrivacyPageTitle" xml:space="preserve">
+    <value>سياسة الخصوصية</value>
+  </data>
+  <data name="PrivacyPageDescription" xml:space="preserve">
+    <value>استخدم هذه الصفحة لعرض تفاصيل سياسة الخصوصية الخاصة بموقعك.</value>
+  </data>
+  <data name="RegisterTitle" xml:space="preserve">
+    <value>إنشاء حساب</value>
+  </data>
+  <data name="RegisterSubtitle" xml:space="preserve">
+    <value>أنشئ حسابًا جديدًا.</value>
+  </data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve">
+    <value>أعد إدخال كلمة المرور</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>تأكيد كلمة المرور</value>
+  </data>
+  <data name="RegisterButton" xml:space="preserve">
+    <value>إنشاء حساب</value>
+  </data>
+  <data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>لديك حساب بالفعل؟</value>
+  </data>
+  <data name="PasswordMinimumLength" xml:space="preserve">
+    <value>يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>حقل تأكيد كلمة المرور مطلوب.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>كلمة المرور وتأكيدها غير متطابقين.</value>
+  </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>يحتوي عنوان البريد الإلكتروني على أحرف غير مدعومة.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>يرجى إدخال عنوان بريد إلكتروني صالح.</value>
+  </data>
+  <data name="DuplicateUserName" xml:space="preserve">
+    <value>يوجد حساب مسجل بهذا البريد الإلكتروني بالفعل.</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>يوجد حساب مسجل بهذا البريد الإلكتروني بالفعل.</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>لا تحتوي كلمة المرور على عدد كافٍ من الأحرف المختلفة.</value>
+  </data>
+  <data name="PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على رمز خاص.</value>
+  </data>
+  <data name="PasswordRequiresDigit" xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على رقم.</value>
+  </data>
+  <data name="PasswordRequiresLower" xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على حرف إنجليزي صغير.</value>
+  </data>
+  <data name="PasswordRequiresUpper" xml:space="preserve">
+    <value>يجب أن تحتوي كلمة المرور على حرف إنجليزي كبير.</value>
+  </data>
+  <data name="BooksTitle" xml:space="preserve">
+    <value>الكتب</value>
+  </data>
+  <data name="AddBookButton" xml:space="preserve">
+    <value>إضافة كتاب</value>
+  </data>
+  <data name="AuthorsPageButton" xml:space="preserve">
+    <value>المؤلفون</value>
+  </data>
+  <data name="CategoriesPageButton" xml:space="preserve">
+    <value>التصنيفات</value>
+  </data>
+  <data name="BorrowBookButton" xml:space="preserve">
+    <value>استعارة كتاب</value>
+  </data>
+  <data name="BookTitleLabel" xml:space="preserve">
+    <value>العنوان</value>
+  </data>
+  <data name="AuthorsLabel" xml:space="preserve">
+    <value>المؤلفون</value>
+  </data>
+  <data name="CategoryLabel" xml:space="preserve">
+    <value>التصنيف</value>
+  </data>
+  <data name="CopiesLabel" xml:space="preserve">
+    <value>النسخ</value>
+  </data>
+  <data name="ActionsLabel" xml:space="preserve">
+    <value>الإجراءات</value>
+  </data>
+  <data name="NoAuthorsAssigned" xml:space="preserve">
+    <value>لم يتم تعيين مؤلفين</value>
+  </data>
+  <data name="UncategorizedLabel" xml:space="preserve">
+    <value>غير مصنّف</value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>تعديل</value>
+  </data>
+  <data name="ViewOnlyLabel" xml:space="preserve">
+    <value>للعرض فقط</value>
+  </data>
+  <data name="AddBookTitle" xml:space="preserve">
+    <value>إضافة كتاب</value>
+  </data>
+  <data name="SelectCategoryOption" xml:space="preserve">
+    <value>-- اختر التصنيف --</value>
+  </data>
+  <data name="EditBookTitle" xml:space="preserve">
+    <value>تعديل الكتاب</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="BookTitleRequired" xml:space="preserve">
+    <value>حقل عنوان الكتاب مطلوب.</value>
+  </data>
+  <data name="BookTitleMaximumLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز عنوان الكتاب 150 حرفًا.</value>
+  </data>
+  <data name="CopiesRange" xml:space="preserve">
+    <value>يجب أن يكون عدد النسخ بين 0 و1000.</value>
+  </data>
+  <data name="AuthorSelectionRequired" xml:space="preserve">
+    <value>يرجى اختيار مؤلف واحد على الأقل.</value>
+  </data>
+  <data name="InvalidAuthorsSelection" xml:space="preserve">
+    <value>اختيار المؤلفين غير صالح.</value>
+  </data>
+  <data name="AuthorsTitle" xml:space="preserve">
+    <value>المؤلفون</value>
+  </data>
+  <data name="AddAuthorTitle" xml:space="preserve">
+    <value>إضافة مؤلف</value>
+  </data>
+  <data name="AddAuthorButton" xml:space="preserve">
+    <value>إضافة مؤلف</value>
+  </data>
+  <data name="AuthorFullNameLabel" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+  <data name="EditAuthorTitle" xml:space="preserve">
+    <value>تعديل المؤلف</value>
+  </data>
+  <data name="ArchivedAuthorsTitle" xml:space="preserve">
+    <value>المؤلفون المؤرشفون</value>
+  </data>
+  <data name="BackToActiveAuthorsButton" xml:space="preserve">
+    <value>العودة إلى المؤلفين النشطين</value>
+  </data>
+  <data name="ArchivedAtLabel" xml:space="preserve">
+    <value>تاريخ الأرشفة</value>
+  </data>
+  <data name="RestoreButton" xml:space="preserve">
+    <value>استعادة</value>
+  </data>
+  <data name="AuthorFullNameRequired" xml:space="preserve">
+    <value>حقل الاسم الكامل للمؤلف مطلوب.</value>
+  </data>
+  <data name="AuthorFullNameMaximumLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الاسم الكامل للمؤلف 100 حرف.</value>
+  </data>
+  <data name="CategoriesTitle" xml:space="preserve">
+    <value>التصنيفات</value>
+  </data>
+  <data name="AddCategoryTitle" xml:space="preserve">
+    <value>إضافة تصنيف</value>
+  </data>
+  <data name="AddCategoryButton" xml:space="preserve">
+    <value>إضافة تصنيف</value>
+  </data>
+  <data name="CategoryNameLabel" xml:space="preserve">
+    <value>الاسم</value>
+  </data>
+  <data name="EditCategoryTitle" xml:space="preserve">
+    <value>تعديل التصنيف</value>
+  </data>
+  <data name="ArchivedCategoriesTitle" xml:space="preserve">
+    <value>التصنيفات المؤرشفة</value>
+  </data>
+  <data name="BackToActiveCategoriesButton" xml:space="preserve">
+    <value>العودة إلى التصنيفات النشطة</value>
+  </data>
+  <data name="CategoryNameRequired" xml:space="preserve">
+    <value>حقل اسم التصنيف مطلوب.</value>
+  </data>
+  <data name="CategoryNameMaximumLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز اسم التصنيف 50 حرفًا.</value>
+  </data>
+  <data name="RegisteredPersonsTitle" xml:space="preserve">
+    <value>الأشخاص المسجلون</value>
+  </data>
+  <data name="RegisterPersonTitle" xml:space="preserve">
+    <value>تسجيل شخص</value>
+  </data>
+  <data name="RegisterPersonButton" xml:space="preserve">
+    <value>تسجيل شخص</value>
+  </data>
+  <data name="PersonIdLabel" xml:space="preserve">
+    <value>المعرّف</value>
+  </data>
+  <data name="PersonFullNameLabel" xml:space="preserve">
+    <value>الاسم الكامل</value>
+  </data>
+  <data name="PersonAgeLabel" xml:space="preserve">
+    <value>العمر</value>
+  </data>
+  <data name="PersonGenderLabel" xml:space="preserve">
+    <value>الجنس</value>
+  </data>
+  <data name="PersonMajorLabel" xml:space="preserve">
+    <value>التخصص</value>
+  </data>
+  <data name="SubmitButton" xml:space="preserve">
+    <value>إرسال</value>
+  </data>
+  <data name="EditPersonTitle" xml:space="preserve">
+    <value>تعديل بيانات الشخص</value>
+  </data>
+  <data name="ArchivedPersonsTitle" xml:space="preserve">
+    <value>الأشخاص المؤرشفون</value>
+  </data>
+  <data name="BackToActivePersonsButton" xml:space="preserve">
+    <value>العودة إلى الأشخاص النشطين</value>
+  </data>
+  <data name="PersonFullNameRequired" xml:space="preserve">
+    <value>حقل الاسم الكامل للشخص مطلوب.</value>
+  </data>
+  <data name="PersonFullNameMaximumLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز الاسم الكامل للشخص 100 حرف.</value>
+  </data>
+  <data name="PersonAgeRequired" xml:space="preserve">
+    <value>حقل العمر مطلوب.</value>
+  </data>
+  <data name="PersonAgeRange" xml:space="preserve">
+    <value>يجب أن يكون العمر بين 1 و120.</value>
+  </data>
+  <data name="PersonGenderRequired" xml:space="preserve">
+    <value>يرجى اختيار الجنس.</value>
+  </data>
+  <data name="PersonMajorRequired" xml:space="preserve">
+    <value>حقل التخصص مطلوب.</value>
+  </data>
+  <data name="PersonMajorMaximumLength" xml:space="preserve">
+    <value>يجب ألا يتجاوز التخصص 100 حرف.</value>
+  </data>
+  <data name="SelectGenderOption" xml:space="preserve">
+    <value>-- اختر الجنس --</value>
+  </data>
+  <data name="MaleLabel" xml:space="preserve">
+    <value>ذكر</value>
+  </data>
+  <data name="FemaleLabel" xml:space="preserve">
+    <value>أنثى</value>
+  </data>
 </root>

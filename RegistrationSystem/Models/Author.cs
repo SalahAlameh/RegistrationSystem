@@ -14,8 +14,11 @@ namespace RegistrationSystem.Models
         public bool IsDeleted { get; set; } = false; // false means the author is active; true means the author is archived
         public DateTime? DeletedAt { get; set; } // stores when the author was archived; null means it has never been archived
 
-        [Required]
-        [StringLength(100)]
+        [Display(Name = "AuthorFullNameLabel")]
+        [Required(ErrorMessage = "AuthorFullNameRequired")]
+        [StringLength(
+            100,
+            ErrorMessage = "AuthorFullNameMaximumLength")]
         public string FullName { get; set; } = string.Empty; // EF Core will make this column NOT NULL in the database, and the [Required] attribute will make it required in the UI. The string.Empty initialization is just to avoid a compiler warning about non-nullable properties not being initialized
 
         public ICollection<Book> Books { get; set; } = new List<Book>(); // we didnt use IEnumerable like we used in the dropdown because EF Core needs to be able to add/remove individual books from this collection as relationships change, not just read through it once

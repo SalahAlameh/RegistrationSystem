@@ -219,4 +219,346 @@
   <data name="ActiveBorrowingsChartLabel" xml:space="preserve">
     <value>Active borrowings</value>
   </data>
+  <data name="ToggleNavigationLabel" xml:space="preserve">
+    <value>Toggle navigation</value>
+  </data>
+  <data name="NavigationViewBooks" xml:space="preserve">
+    <value>View Books</value>
+  </data>
+  <data name="NavigationDashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+  <data name="NavigationRegisteredPersons" xml:space="preserve">
+    <value>Registered Persons</value>
+  </data>
+  <data name="NavigationBorrowedBooks" xml:space="preserve">
+    <value>Borrowed Books</value>
+  </data>
+  <data name="NavigationArchive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <data name="NavigationUsers" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="SwitchToEnglishLabel" xml:space="preserve">
+    <value>Switch to English</value>
+  </data>
+  <data name="SwitchToArabicLabel" xml:space="preserve">
+    <value>Switch to Arabic</value>
+  </data>
+  <data name="PrivacyLink" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="HelloGreeting" xml:space="preserve">
+    <value>Hello {0}!</value>
+  </data>
+  <data name="ChangePasswordLink" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="LogoutButton" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="SignUpLink" xml:space="preserve">
+    <value>Sign Up</value>
+  </data>
+  <data name="LoginLink" xml:space="preserve">
+    <value>Login</value>
+  </data>
+  <data name="DeleteModalTitle" xml:space="preserve">
+    <value>Confirm Delete</value>
+  </data>
+  <data name="CloseButtonLabel" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="DeleteConfirmationMessage" xml:space="preserve">
+    <value>Are you sure you want to delete {0}? This cannot be undone.</value>
+  </data>
+  <data name="CancelButton" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DeleteButton" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="ErrorPageTitle" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="ErrorHeading" xml:space="preserve">
+    <value>Error.</value>
+  </data>
+  <data name="ErrorProcessingMessage" xml:space="preserve">
+    <value>An error occurred while processing your request.</value>
+  </data>
+  <data name="RequestIdLabel" xml:space="preserve">
+    <value>Request ID:</value>
+  </data>
+  <data name="DevelopmentModeHeading" xml:space="preserve">
+    <value>Development Mode</value>
+  </data>
+  <data name="DevelopmentModeDescription" xml:space="preserve">
+    <value>Switching to the Development environment will display more detailed information about the error that occurred.</value>
+  </data>
+  <data name="DevelopmentModeWarning" xml:space="preserve">
+    <value>The Development environment shouldn't be enabled for deployed applications because it can expose sensitive exception information to users.</value>
+  </data>
+  <data name="DevelopmentModeInstructions" xml:space="preserve">
+    <value>For local debugging, set {0} to {1} and restart the application.</value>
+  </data>
+  <data name="PrivacyPageTitle" xml:space="preserve">
+    <value>Privacy Policy</value>
+  </data>
+  <data name="PrivacyPageDescription" xml:space="preserve">
+    <value>Use this page to detail your site's privacy policy.</value>
+  </data>
+  <data name="RegisterTitle" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="RegisterSubtitle" xml:space="preserve">
+    <value>Create a new account.</value>
+  </data>
+  <data name="ConfirmPasswordPlaceholder" xml:space="preserve">
+    <value>Confirm your password</value>
+  </data>
+  <data name="ConfirmPasswordLabel" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="RegisterButton" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="AlreadyHaveAccount" xml:space="preserve">
+    <value>Already have an account?</value>
+  </data>
+  <data name="PasswordMinimumLength" xml:space="preserve">
+    <value>The password must contain at least 6 characters.</value>
+  </data>
+  <data name="ConfirmPasswordRequired" xml:space="preserve">
+    <value>The confirmation password is required.</value>
+  </data>
+  <data name="PasswordsDoNotMatch" xml:space="preserve">
+    <value>The password and confirmation password do not match.</value>
+  </data>
+  <data name="InvalidUserName" xml:space="preserve">
+    <value>The email address contains unsupported characters.</value>
+  </data>
+  <data name="InvalidEmail" xml:space="preserve">
+    <value>Please enter a valid email address.</value>
+  </data>
+  <data name="DuplicateUserName" xml:space="preserve">
+    <value>An account with this email address already exists.</value>
+  </data>
+  <data name="DuplicateEmail" xml:space="preserve">
+    <value>An account with this email address already exists.</value>
+  </data>
+  <data name="PasswordTooShort" xml:space="preserve">
+    <value>The password must contain at least 6 characters.</value>
+  </data>
+  <data name="PasswordRequiresUniqueChars" xml:space="preserve">
+    <value>The password does not contain enough different characters.</value>
+  </data>
+  <data name="PasswordRequiresNonAlphanumeric" xml:space="preserve">
+    <value>The password must contain a special character.</value>
+  </data>
+  <data name="PasswordRequiresDigit" xml:space="preserve">
+    <value>The password must contain a number.</value>
+  </data>
+  <data name="PasswordRequiresLower" xml:space="preserve">
+    <value>The password must contain a lowercase letter.</value>
+  </data>
+  <data name="PasswordRequiresUpper" xml:space="preserve">
+    <value>The password must contain an uppercase letter.</value>
+  </data>
+  <data name="BooksTitle" xml:space="preserve">
+    <value>Books</value>
+  </data>
+  <data name="AddBookButton" xml:space="preserve">
+    <value>Add Book</value>
+  </data>
+  <data name="AuthorsPageButton" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="CategoriesPageButton" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="BorrowBookButton" xml:space="preserve">
+    <value>Borrow Book</value>
+  </data>
+  <data name="BookTitleLabel" xml:space="preserve">
+    <value>Title</value>
+  </data>
+  <data name="AuthorsLabel" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="CategoryLabel" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="CopiesLabel" xml:space="preserve">
+    <value>Copies</value>
+  </data>
+  <data name="ActionsLabel" xml:space="preserve">
+    <value>Actions</value>
+  </data>
+  <data name="NoAuthorsAssigned" xml:space="preserve">
+    <value>No authors assigned</value>
+  </data>
+  <data name="UncategorizedLabel" xml:space="preserve">
+    <value>Uncategorized</value>
+  </data>
+  <data name="EditButton" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="ViewOnlyLabel" xml:space="preserve">
+    <value>View only</value>
+  </data>
+  <data name="AddBookTitle" xml:space="preserve">
+    <value>Add Book</value>
+  </data>
+  <data name="SelectCategoryOption" xml:space="preserve">
+    <value>-- Select Category --</value>
+  </data>
+  <data name="EditBookTitle" xml:space="preserve">
+    <value>Edit Book</value>
+  </data>
+  <data name="SaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="BookTitleRequired" xml:space="preserve">
+    <value>The book title is required.</value>
+  </data>
+  <data name="BookTitleMaximumLength" xml:space="preserve">
+    <value>The book title cannot exceed 150 characters.</value>
+  </data>
+  <data name="CopiesRange" xml:space="preserve">
+    <value>Copies must be between 0 and 1000.</value>
+  </data>
+  <data name="AuthorSelectionRequired" xml:space="preserve">
+    <value>Please select at least one author.</value>
+  </data>
+  <data name="InvalidAuthorsSelection" xml:space="preserve">
+    <value>The selected authors are not valid.</value>
+  </data>
+  <data name="AuthorsTitle" xml:space="preserve">
+    <value>Authors</value>
+  </data>
+  <data name="AddAuthorTitle" xml:space="preserve">
+    <value>Add Author</value>
+  </data>
+  <data name="AddAuthorButton" xml:space="preserve">
+    <value>Add Author</value>
+  </data>
+  <data name="AuthorFullNameLabel" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+  <data name="EditAuthorTitle" xml:space="preserve">
+    <value>Edit Author</value>
+  </data>
+  <data name="ArchivedAuthorsTitle" xml:space="preserve">
+    <value>Archived Authors</value>
+  </data>
+  <data name="BackToActiveAuthorsButton" xml:space="preserve">
+    <value>Back to Active Authors</value>
+  </data>
+  <data name="ArchivedAtLabel" xml:space="preserve">
+    <value>Archived At</value>
+  </data>
+  <data name="RestoreButton" xml:space="preserve">
+    <value>Restore</value>
+  </data>
+  <data name="AuthorFullNameRequired" xml:space="preserve">
+    <value>The author's full name is required.</value>
+  </data>
+  <data name="AuthorFullNameMaximumLength" xml:space="preserve">
+    <value>The author's full name cannot exceed 100 characters.</value>
+  </data>
+  <data name="CategoriesTitle" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+  <data name="AddCategoryTitle" xml:space="preserve">
+    <value>Add Category</value>
+  </data>
+  <data name="AddCategoryButton" xml:space="preserve">
+    <value>Add Category</value>
+  </data>
+  <data name="CategoryNameLabel" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="EditCategoryTitle" xml:space="preserve">
+    <value>Edit Category</value>
+  </data>
+  <data name="ArchivedCategoriesTitle" xml:space="preserve">
+    <value>Archived Categories</value>
+  </data>
+  <data name="BackToActiveCategoriesButton" xml:space="preserve">
+    <value>Back to Active Categories</value>
+  </data>
+  <data name="CategoryNameRequired" xml:space="preserve">
+    <value>The category name is required.</value>
+  </data>
+  <data name="CategoryNameMaximumLength" xml:space="preserve">
+    <value>The category name cannot exceed 50 characters.</value>
+  </data>
+  <data name="RegisteredPersonsTitle" xml:space="preserve">
+    <value>Registered Persons</value>
+  </data>
+  <data name="RegisterPersonTitle" xml:space="preserve">
+    <value>Person Registration</value>
+  </data>
+  <data name="RegisterPersonButton" xml:space="preserve">
+    <value>Register Person</value>
+  </data>
+  <data name="PersonIdLabel" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="PersonFullNameLabel" xml:space="preserve">
+    <value>Full Name</value>
+  </data>
+  <data name="PersonAgeLabel" xml:space="preserve">
+    <value>Age</value>
+  </data>
+  <data name="PersonGenderLabel" xml:space="preserve">
+    <value>Gender</value>
+  </data>
+  <data name="PersonMajorLabel" xml:space="preserve">
+    <value>Major</value>
+  </data>
+  <data name="SubmitButton" xml:space="preserve">
+    <value>Submit</value>
+  </data>
+  <data name="EditPersonTitle" xml:space="preserve">
+    <value>Edit Person</value>
+  </data>
+  <data name="ArchivedPersonsTitle" xml:space="preserve">
+    <value>Archived Persons</value>
+  </data>
+  <data name="BackToActivePersonsButton" xml:space="preserve">
+    <value>Back to Active Persons</value>
+  </data>
+  <data name="PersonFullNameRequired" xml:space="preserve">
+    <value>The person's full name is required.</value>
+  </data>
+  <data name="PersonFullNameMaximumLength" xml:space="preserve">
+    <value>The person's full name cannot exceed 100 characters.</value>
+  </data>
+  <data name="PersonAgeRequired" xml:space="preserve">
+    <value>The age is required.</value>
+  </data>
+  <data name="PersonAgeRange" xml:space="preserve">
+    <value>Age must be between 1 and 120.</value>
+  </data>
+  <data name="PersonGenderRequired" xml:space="preserve">
+    <value>Please select a gender.</value>
+  </data>
+  <data name="PersonMajorRequired" xml:space="preserve">
+    <value>The major is required.</value>
+  </data>
+  <data name="PersonMajorMaximumLength" xml:space="preserve">
+    <value>The major cannot exceed 100 characters.</value>
+  </data>
+  <data name="SelectGenderOption" xml:space="preserve">
+    <value>-- Select Gender --</value>
+  </data>
+  <data name="MaleLabel" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="FemaleLabel" xml:space="preserve">
+    <value>Female</value>
+  </data>
 </root>

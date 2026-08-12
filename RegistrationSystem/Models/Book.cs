@@ -14,13 +14,20 @@ namespace RegistrationSystem.Models
         public bool IsDeleted { get; set; } = false; // false means the book is active; true means the book is archived
         public DateTime? DeletedAt { get; set; } // stores when the book was archived; null means it has never been archived
 
-        [Required]
-        [StringLength(150)]
+        [Display(Name = "BookTitleLabel")]
+        [Required(ErrorMessage = "BookTitleRequired")]
+        [StringLength(
+            150,
+            ErrorMessage = "BookTitleMaximumLength")]
         public string Title { get; set; }
 
 
+        [Display(Name = "CopiesLabel")]
         [Required]
-        [Range(0, 1000, ErrorMessage = "Copies must be between 0 and 1000.")]
+        [Range(
+            0,
+            1000,
+            ErrorMessage = "CopiesRange")]
         public int Copies { get; set; }
 
         public int? CategoryId { get; set; } // foreign key to Category, optional because a book may not have a category (by optional i mean ?)

@@ -1,5 +1,9 @@
 ﻿@using System.Globalization
 
+@* Retrieves shared layout translations from the
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
     // Identifies which language is active so the
     // matching language button can be highlighted.
@@ -62,7 +66,7 @@
                         data-bs-target=".navbar-collapse"
                         aria-controls="navbarSupportedContent"
                         aria-expanded="false"
-                        aria-label="Toggle navigation">
+                        aria-label="@Localizer["ToggleNavigationLabel"]">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -77,7 +81,7 @@
                                 <a class="nav-link text-dark"
                                    asp-controller="Book"
                                    asp-action="Index">
-                                    View Books
+                                    @Localizer["NavigationViewBooks"]
                                 </a>
                             </li>
                         }
@@ -89,7 +93,7 @@
                                 <a class="nav-link text-dark"
                                    asp-controller="Dashboard"
                                    asp-action="Index">
-                                    Dashboard
+                                    @Localizer["NavigationDashboard"]
                                 </a>
                             </li>
                         }
@@ -100,7 +104,7 @@
                                 <a class="nav-link text-dark"
                                    asp-controller="Person"
                                    asp-action="Index">
-                                    Registered Persons
+                                    @Localizer["NavigationRegisteredPersons"]
                                 </a>
                             </li>
                         }
@@ -112,7 +116,7 @@
                                 <a class="nav-link text-dark"
                                    asp-controller="Borrow"
                                    asp-action="ViewBorrowedBooks">
-                                    Borrowed Books
+                                    @Localizer["NavigationBorrowedBooks"]
                                 </a>
                             </li>
                         }
@@ -123,7 +127,7 @@
                                 <a class="nav-link text-dark"
                                    asp-controller="Archive"
                                    asp-action="Index">
-                                    Archive
+                                    @Localizer["NavigationArchive"]
                                 </a>
                             </li>
                         }
@@ -135,7 +139,7 @@
                                 <a class="nav-link text-dark"
                                    asp-controller="Users"
                                    asp-action="Index">
-                                    Users
+                                    @Localizer["NavigationUsers"]
                                 </a>
                             </li>
                         }
@@ -161,8 +165,9 @@
                                                     ? "btn-primary"
                                                     : "btn-outline-secondary")"
                                     aria-pressed="@(currentCulture == "en"
-                                                    ? "true"
-                                                    : "false")">
+                                                ? "true"
+                                                : "false")"
+                                    aria-label="@Localizer["SwitchToEnglishLabel"]">
                                 EN
                             </button>
 
@@ -173,8 +178,9 @@
                                                     ? "btn-primary"
                                                     : "btn-outline-secondary")"
                                     aria-pressed="@(currentCulture == "ar"
-                                                    ? "true"
-                                                    : "false")">
+                                                ? "true"
+                                                : "false")"
+                                    aria-label="@Localizer["SwitchToArabicLabel"]">
                                 AR
                             </button>
                         </form>
@@ -194,7 +200,11 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2026 - RegistrationSystem - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 - RegistrationSystem - <a asp-area=""
+                                              asp-controller="Home"
+                                              asp-action="Privacy">
+            @Localizer["PrivacyLink"]
+        </a>
         </div>
     </footer>
 

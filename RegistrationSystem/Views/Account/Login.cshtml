@@ -98,8 +98,8 @@ RegistrationSystem.SharedResource > Localizer
                     </p>
 
                     <p>
-                        <a asp-area="Identity"
-                           asp-page="/Account/Register"
+                        <a asp-controller="Account"
+                           asp-action="Register"
                            asp-route-returnUrl="@Model.ReturnUrl">
                             @Localizer["RegisterLink"]
                         </a>

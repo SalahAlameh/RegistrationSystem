@@ -1,18 +1,40 @@
-﻿<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true"> @*this whole div is invisible by default*@
+﻿@using System.Text.Json
+
+@* Retrieves delete-modal translations from the
+   shared English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
+
+<div class="modal fade"
+     id="deleteModal"
+     tabindex="-1"
+     aria-labelledby="deleteModalTitle"
+     aria-hidden="true">   @*this whole div is invisible by default*@
+ 
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirm Delete</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title"
+                    id="deleteModalTitle">
+                    @Localizer["DeleteModalTitle"]
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@Localizer["CloseButtonLabel"]"></button>
             </div>
-            <div class="modal-body">
-                Are you sure you want to delete <strong id="deleteItemName"></strong>? This cannot be undone.
+            <div class="modal-body"
+                 id="deleteConfirmationMessage">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    @Localizer["CancelButton"]
+                </button>
                 <form id="deleteForm" asp-action="Delete" method="post">
                     <input type="hidden" name="id" id="deleteItemId" />
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="submit"
+                            class="btn btn-danger">
+                        @Localizer["DeleteButton"]
+                    </button>
                 </form>
             </div>
         </div>
@@ -20,6 +42,13 @@
 </div>
 
 <script>
+
+    // The resource contains {0}, which is replaced
+    // with the selected item's name when the modal opens.
+    var deleteConfirmationTemplate =
+        @Html.Raw(JsonSerializer.Serialize(
+                Localizer["DeleteConfirmationMessage"].Value));
+
     var deleteModalEl = document.getElementById('deleteModal');
     deleteModalEl.addEventListener('show.bs.modal', function(event) {
         var button = event.relatedTarget;
@@ -27,6 +56,15 @@
         var name = button.getAttribute('data-name');
 
         document.getElementById('deleteItemId').value = id;
-        document.getElementById('deleteItemName').textContent = name;
+        var confirmationMessage =
+            deleteConfirmationTemplate.replace(
+                '{0}',
+                function() {
+                    return name;
+                });
+
+        document.getElementById(
+            'deleteConfirmationMessage'
+        ).textContent = confirmationMessage; // using textContent prevents an item name from being interpreted as HTML
     });
 </script>

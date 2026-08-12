@@ -24,19 +24,30 @@ namespace RegistrationSystem.Models
 
 
 
-        [Required] // basically mean NOT NULL in SQL and mandatory
-        [StringLength(100)] // same thing as VARCHAR(100) in SQL
+        [Display(Name = "PersonFullNameLabel")]
+        [Required(ErrorMessage = "PersonFullNameRequired")] // basically mean NOT NULL in SQL and mandatory
+        [StringLength(
+            100,
+            ErrorMessage = "PersonFullNameMaximumLength")] // same thing as VARCHAR(100) in SQL
         public string FullName { get; set; }
 
-        [Required]
-        [Range(1, 120)] // this stops users from entering unreasonable ages, caps it between 1 and 120
+        [Display(Name = "PersonAgeLabel")]
+        [Required(ErrorMessage = "PersonAgeRequired")]
+        [Range(
+            1,
+            120,
+            ErrorMessage = "PersonAgeRange")] // this stops users from entering unreasonable ages, caps it between 1 and 120
         public int Age { get; set; }
 
-        [Required]
+        [Display(Name = "PersonGenderLabel")]
+        [Required(ErrorMessage = "PersonGenderRequired")]
         public string Gender { get; set; }
 
-        [Required]
-        [StringLength(100)]
+        [Display(Name = "PersonMajorLabel")]
+        [Required(ErrorMessage = "PersonMajorRequired")]
+        [StringLength(
+            100,
+            ErrorMessage = "PersonMajorMaximumLength")]
         public string Major { get; set; }
 
         // Persistence logic lives on the model (fat model, skinny controller)

@@ -4,16 +4,20 @@
    Because of this, everywhere below you can use asp-for="FullName"
    and Razor knows exactly which C# property you mean. *@
 
+@* Retrieves Person-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = Localizer["RegisterPersonTitle"];
 }
 
-<h2>Person Registration</h2>
+<h2>@Localizer["RegisterPersonTitle"]</h2>
 
 <form asp-action="Register" method="post">
     <div class="mb-3">
         @* Bootstrap spacing (margin-bottom) *@
-        <label asp-for="FullName" class="form-label"></label>
+        <label asp-for="FullName" class="form-label">@Localizer["PersonFullNameLabel"]</label>
         <input asp-for="FullName" class="form-control" />
         @* Didn't write type manually — it automatically chooses the right
            input type based on the property's C# type *@
@@ -23,29 +27,46 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="Age" class="form-label"></label>
+        <label asp-for="Age" class="form-label">@Localizer["PersonAgeLabel"]</label>
         <input asp-for="Age" class="form-control" />
         <span asp-validation-for="Age" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Gender" class="form-label"></label>
-        <select asp-for="Gender" class="form-select">
-            @* Hardcoded select with hardcoded options *@
-            <option value="">-- Select Gender --</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+        <label asp-for="Gender"
+               class="form-label">
+            @Localizer["PersonGenderLabel"]
+        </label>
+
+        <select asp-for="Gender"
+                class="form-select">
+            @* The submitted values remain Male and Female,
+           while only their displayed text is translated. *@
+            <option value="">
+                @Localizer["SelectGenderOption"]
+            </option>
+
+            <option value="Male">
+                @Localizer["MaleLabel"]
+            </option>
+
+            <option value="Female">
+                @Localizer["FemaleLabel"]
+            </option>
         </select>
-        <span asp-validation-for="Gender" class="text-danger"></span>
+
+        <span asp-validation-for="Gender"
+              class="text-danger">
+        </span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Major" class="form-label"></label>
+        <label asp-for="Major" class="form-label">@Localizer["PersonMajorLabel"]</label>
         <input asp-for="Major" class="form-control" />
         <span asp-validation-for="Major" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">@Localizer["SubmitButton"]</button>
 </form>
 
 @* This gives immediate feedback (e.g. errors when entering a letter

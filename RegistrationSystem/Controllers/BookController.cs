@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using RegistrationSystem.Models;
 using RegistrationSystem.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Localization;
 
 namespace RegistrationSystem.Controllers
 {
@@ -12,13 +13,16 @@ namespace RegistrationSystem.Controllers
         private readonly BookService _bookService;
         private readonly AuthorService _authorService; // added to use the AuthorService
         private readonly CategoryService _categoryService; // added to use the CategoryService
+        private readonly IStringLocalizer<SharedResource> _localizer; // added to use the IStringLocalizer for localization
+    
 
-        public BookController(BookService bookService, AuthorService authorService, CategoryService categoryService) //added the later parameters to the constructor to inject the AuthorService and CategoryService
+        public BookController(BookService bookService, AuthorService authorService, CategoryService categoryService, IStringLocalizer<SharedResource> localizer) //added the later parameters to the constructor to inject the AuthorService and CategoryService
         {
             _bookService = bookService;
             _authorService = authorService; // this was also added to use the AuthorService
             _categoryService = categoryService; // added to use the CategoryService
-        } // here the controller receives all three
+            _localizer = localizer; // added to use the IStringLocalizer for localization
+        } // here the controller receives all 4
 
         // GET: /Book/Add
         [Authorize(Roles = "Admin")]
@@ -57,8 +61,8 @@ namespace RegistrationSystem.Controllers
             if (!saved) // handling invalid author IDs
             {
                 ModelState.AddModelError(
-                    nameof(model.SelectedAuthorIds),
-                    "The selected authors are not valid.");
+                        nameof(model.SelectedAuthorIds),
+                        _localizer["InvalidAuthorsSelection"]);
 
                 PopulateAuthors(model);
                 PopulateCategories(model);

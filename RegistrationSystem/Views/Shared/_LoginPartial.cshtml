@@ -6,6 +6,11 @@
 
 @* uses that ID to find the linked Person *@
 @inject RegistrationSystem.Services.PersonService PersonService
+
+@* Retrieves account-navigation translations from
+   the shared English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
     var displayName = User.Identity?.Name;
 
@@ -29,8 +34,13 @@
     @if (SignInManager.IsSignedIn(User)) // this line checks whether the visitor is logged in
     {
         <li class="nav-item">
-            <span class="nav-link text-dark">
-                Hello @displayName!
+            <span class="nav-link text-dark">     
+                @Localizer[
+                    "HelloGreeting",
+                    displayName ?? string.Empty]
+                @* {0} is a placeholder that ASP.NET Core replaces with the
+   logged-in person's name. This allows each language to position
+   the name correctly according to its grammar. *@
             </span>
         </li>
 
@@ -40,7 +50,7 @@
                 <a class="nav-link text-dark"
                    asp-area="Identity"
                    asp-page="/Account/Manage/ChangePassword">
-                    Change Password
+                    @Localizer["ChangePasswordLink"]
                 </a>
             </li>
         }
@@ -52,7 +62,7 @@
                   asp-route-returnUrl="@Url.Action("Index", "Book", new { area = "" })">
                 <button type="submit"
                         class="nav-link btn btn-link text-dark border-0">
-                    Logout
+                    @Localizer["LogoutButton"]
                 </button>
             </form>
         </li>
@@ -61,9 +71,9 @@
     {
         <li class="nav-item">
             <a class="nav-link text-dark"
-               asp-area="Identity"
-               asp-page="/Account/Register">
-                Sign Up
+               asp-controller="Account"
+               asp-action="Register">
+                @Localizer["SignUpLink"]
             </a>
         </li>
 
@@ -73,7 +83,7 @@
             <a class="nav-link text-dark"
                asp-controller="Account"
                asp-action="Login">
-                Login
+                @Localizer["LoginLink"]
             </a>
         </li>
     }

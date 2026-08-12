@@ -1,19 +1,23 @@
 ﻿@model RegistrationSystem.Models.Category
 
+@* Retrieves Category-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Add Category";
+    ViewData["Title"] = Localizer["AddCategoryTitle"];
 }
 
-<h2>Add Category</h2>
+<h2>@Localizer["AddCategoryTitle"]</h2>
 
 <form asp-action="Add" method="post">
     <div class="mb-3">
-        <label asp-for="Name" class="form-label"></label>
+        <label asp-for="Name" class="form-label">@Localizer["CategoryNameLabel"]</label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Add Category</button>
+    <button type="submit" class="btn btn-primary">@Localizer["AddCategoryButton"]</button>
 </form>
 
 @section Scripts {

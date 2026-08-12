@@ -1,10 +1,14 @@
 ﻿@model RegistrationSystem.Models.Author
 
+@* Retrieves Author-page translations from the shared
+   English or Arabic resource file. *@
+@inject Microsoft.Extensions.Localization.IStringLocalizer<RegistrationSystem.SharedResource> Localizer
+
 @{
-    ViewData["Title"] = "Add Author";
+    ViewData["Title"] = Localizer["AddAuthorTitle"];
 }
 
-<h2>Add Author</h2>
+<h2>@Localizer["AddAuthorTitle"]</h2>
 
 <div asp-validation-summary="ModelOnly"
      class="text-danger">
@@ -14,6 +18,7 @@
     <div class="mb-3">
         <label asp-for="FullName"
                class="form-label">
+            @Localizer["AuthorFullNameLabel"]
         </label>
 
         <input asp-for="FullName"
@@ -26,12 +31,12 @@
 
     <button type="submit"
             class="btn btn-primary">
-        Add Author
+        @Localizer["AddAuthorButton"]
     </button>
 
     <a asp-action="Index"
        class="btn btn-secondary">
-        Cancel
+        @Localizer["CancelButton"]
     </a>
 </form>
 

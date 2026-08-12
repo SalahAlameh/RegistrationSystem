@@ -11,6 +11,9 @@ namespace RegistrationSystem.Controllers
     // while continuing to use ASP.NET Core Identity.
     public class AccountController : Controller
     {
+        private readonly UserManager<IdentityUser>
+            _userManager;
+
         private readonly SignInManager<IdentityUser>
             _signInManager;
 
@@ -18,13 +21,14 @@ namespace RegistrationSystem.Controllers
             _localizer;
 
         public AccountController(
-            SignInManager<IdentityUser> signInManager,
-            IStringLocalizer<SharedResource> localizer)
+    UserManager<IdentityUser> userManager,
+    SignInManager<IdentityUser> signInManager,
+    IStringLocalizer<SharedResource> localizer)
         {
+            _userManager = userManager;
             _signInManager = signInManager;
             _localizer = localizer;
         }
-
         // GET: /Account/Login
         [AllowAnonymous] // lets logged out visitors access it
         [HttpGet]
@@ -109,5 +113,72 @@ namespace RegistrationSystem.Controllers
 
             return View(model);
         }
+
+        // GET: /Account/Register
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult Register(
+            string? returnUrl = null)
+        {
+            returnUrl ??= Url.Content("~/");
+
+            var viewModel = new RegisterViewModel
+            {
+                ReturnUrl = returnUrl
+            };
+
+            return View(viewModel);
+        }
+
+        // POST: /Account/Register
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(
+            RegisterViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = new IdentityUser
+            {
+                UserName = model.Email,
+                Email = model.Email
+            };
+
+            var result = await _userManager.CreateAsync(
+                user,
+                model.Password);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(
+                    user,
+                    isPersistent: false);
+
+                if (!string.IsNullOrWhiteSpace(
+                        model.ReturnUrl) &&
+                    Url.IsLocalUrl(model.ReturnUrl))
+                {
+                    return LocalRedirect(model.ReturnUrl);
+                }
+
+                return RedirectToAction(
+                    "Index",
+                    "Home");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    _localizer[error.Code]);
+            }
+
+            return View(model);
+        }
+
     }
 }

@@ -7,20 +7,30 @@ namespace RegistrationSystem.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(150)]
+        [Display(Name = "BookTitleLabel")]
+        [Required(ErrorMessage = "BookTitleRequired")]
+        [StringLength(
+            150,
+            ErrorMessage = "BookTitleMaximumLength")]
         public string Title { get; set; } = string.Empty;
 
-        [Range(0, 1000, ErrorMessage = "Copies must be between 0 and 1000.")]
+        [Display(Name = "CopiesLabel")]
+        [Range(
+            0,
+            1000,
+            ErrorMessage = "CopiesRange")]
         public int Copies { get; set; }
 
-        [Display(Name = "Category")]
+        [Display(Name = "CategoryLabel")]
         public int? CategoryId { get; set; }
         public IEnumerable<SelectListItem> Categories { get; set; } = new List<SelectListItem>();
 
 
-        [Display(Name = "Authors")]
-        [MinLength(1, ErrorMessage = "Please select at least one author.")] // the 1 means its required at least one author to be selected
+        [Display(Name = "AuthorsLabel")]
+        [Required(ErrorMessage = "AuthorSelectionRequired")]
+        [MinLength(
+            1,
+            ErrorMessage = "AuthorSelectionRequired")]
         public List<int> SelectedAuthorIds { get; set; } = new(); // SelectedAuthorsIds stores the IDs of authors selected in the form - List<int> means multiple integer IDs can be stored
 
         public IEnumerable<SelectListItem> Authors { get; set; } = new List<SelectListItem>();
